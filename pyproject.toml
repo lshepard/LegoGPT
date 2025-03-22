@@ -1,0 +1,33 @@
+[project]
+name = "legogpt"
+version = "0.1.0"
+description = "Official repository for LegoGPT"
+readme = "README.md"
+authors = [
+    { name = "Ava Pun", email = "apun@andrew.cmu.edu" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "torch>=2.6.0",
+    "transformers>=4.50.0",
+    "trl>=0.15.2",
+]
+
+[project.optional-dependencies]
+build = ["torch", "setuptools", "packaging"]
+compile = ["flash-attn"]
+
+[tool.uv]
+no-build-isolation-package = ["flash-attn"]
+
+[[tool.uv.dependency-metadata]]
+name = "flash-attn"
+version = "2.6.3"
+requires-dist = ["torch", "einops"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8.3.5"]

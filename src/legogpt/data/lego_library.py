@@ -1,0 +1,22 @@
+import json
+from pathlib import Path
+
+with open(Path(__file__).parent / 'lego_library.json') as f:
+    lego_library = json.load(f)  # Maps brick ID to brick properties
+
+max_brick_dimension = max(max(properties['height'], properties['width']) for properties in lego_library.values())
+
+_dimensions_to_brick_id_dict = {}
+for brick_id, properties in lego_library.items():
+    key = (properties['height'], properties['width'])
+    if key not in _dimensions_to_brick_id_dict.keys():
+        _dimensions_to_brick_id_dict[key] = int(brick_id)
+
+
+def dimensions_to_brick_id(h: int, w: int):
+    if h > w:
+        h, w = w, h
+    try:
+        return _dimensions_to_brick_id_dict[(h, w)]
+    except KeyError:
+        raise ValueError(f'No brick ID for brick of dimensions: {h}x{w}')

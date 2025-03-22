@@ -1,0 +1,84 @@
+import copy
+
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers.cache_utils import DynamicCache
+from transformers.generation.logits_process import LogitsProcessorList
+
+
+class LLM:
+    """
+    A small wrapper class for a language model.
+    """
+
+    def __init__(self, model_name: str, device: str = 'cuda' if torch.cuda.is_available() else 'cpu'):
+        self.device = device
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.bfloat16,
+            device_map=device,
+            attn_implementation='flash_attention_2',
+        ).to(device)
+
+        self.kv_cache = None
+        self.kv_cache_saved = None
+        self.input_ids_cache = None
+        self.input_ids_cache_saved = None
+
+    def __call__(
+            self,
+            prompt: str | torch.Tensor | None = None,
+            *,
+            return_as_ids: bool = False,
+            max_new_tokens: int = 100,
+            temperature: float = 0.8,
+            logits_processor: LogitsProcessorList | None = None,
+    ) -> str:
+        """
+        Generates text, given a prompt.
+        """
+
+        # If prompt is None, continue generation from previously generated tokens
+        if prompt is None:
+            prompt = self.input_ids_cache
+        else:
+            self.reset_cache()
+
+        # If prompt is a string, encode it into token ids
+        if isinstance(prompt, str):
+            encoded_input = self.tokenizer(prompt, return_tensors='pt')
+            input_ids = encoded_input['input_ids'].to(self.device)
+            attention_mask = encoded_input['attention_mask'].to(self.device)
+        else:
+            input_ids = prompt.to(self.device)
+            attention_mask = torch.ones_like(input_ids)
+
+        # Run generation
+        output_ids = self.model.generate(
+            input_ids,
+            attention_mask=attention_mask,
+            max_new_tokens=max_new_tokens,
+            pad_token_id=self.tokenizer.eos_token_id,
+            do_sample=True,
+            temperature=temperature,
+            logits_processor=logits_processor,
+            past_key_values=self.kv_cache,
+        )
+        self.input_ids_cache = output_ids
+
+        # Return result as token ids or as a string
+        input_length = input_ids.shape[1]
+        result_ids = output_ids[0][input_length:]
+        return result_ids if return_as_ids else self.tokenizer.decode(result_ids)
+
+    def reset_cache(self) -> None:
+        self.kv_cache = DynamicCache()
+
+    def save_state(self) -> None:
+        self.kv_cache_saved = copy.deepcopy(self.kv_cache)
+        self.input_ids_cache_saved = self.input_ids_cache
+
+    def rollback_to_saved_state(self) -> None:
+        self.kv_cache = self.kv_cache_saved
+        self.input_ids_cache = self.input_ids_cache_saved
