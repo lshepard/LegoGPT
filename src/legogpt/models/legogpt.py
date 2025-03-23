@@ -34,32 +34,32 @@ class LegoGPT:
 
         self.llm = LLM('meta-llama/Llama-3.2-1B-Instruct', self.device)
 
-    def __call__(self, caption: str) -> str:
+    def __call__(self, caption: str) -> LegoStructure:
         messages = [
             {'role': 'system', 'content': 'You are a helpful assistant.'},
             {'role': 'user', 'content': create_instruction(caption)},
         ]
         prompt = self.llm.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors='pt')
 
-        bricks = []
+        lego = LegoStructure([])
         for brick_num in range(100):
-            if brick_num == 0:
-                brick, rejection_reasons = self.generate_brick_with_rejection_sampling(prompt)
-            else:
-                brick, rejection_reasons = self.generate_brick_with_rejection_sampling()
+            brick, rejection_reasons = self.generate_brick_with_rejection_sampling(
+                prompt if brick_num == 0 else None, lego=lego
+            )
             if not brick:
                 break
-            bricks.append(brick)
+            lego.add_brick(LegoBrick.from_txt(brick))
 
-        return ''.join(bricks)
+        return lego
 
     def generate_brick_with_rejection_sampling(
             self,
             prompt: str | None = None,
+            lego: LegoStructure = LegoStructure([]),
             max_generations_per_brick: int = 10,
     ) -> (str, Counter):
         """
-        Generates a LEGO brick using rejection sampling to ensure the brick is valid.
+        Generates a LEGO brick to add to the LEGO structure, using rejection sampling to ensure the brick is valid.
         """
         rejection_reasons = Counter()
         rejected_bricks = set()
@@ -71,7 +71,7 @@ class LegoGPT:
             if not brick:  # Generation is finished
                 break
 
-            add_brick_result = self._try_adding_brick(brick, LegoStructure([]), rejected_bricks)
+            add_brick_result = self._try_adding_brick(brick, lego, rejected_bricks)
             if add_brick_result == 'success' or generation_num == max_generations_per_brick - 1:
                 break
 
@@ -95,7 +95,14 @@ class LegoGPT:
         except ValueError:  # Brick is badly formatted
             return 'ill_formatted'
 
-        return 'success'
+        # Try adding brick to the LEGO structure
+        lego.add_brick(brick)
+        if lego.has_collisions():
+            result = 'collision'
+        else:
+            result = 'success'
+        lego.undo_add_brick()
+        return result
 
     def generate_brick(self, prompt: str | None = None) -> str:
         """

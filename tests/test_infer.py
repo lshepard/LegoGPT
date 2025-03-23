@@ -1,4 +1,3 @@
-from legogpt.data.lego_structure import LegoStructure
 from legogpt.models.legogpt import LegoGPT
 from legogpt.models.llm import LLM
 
@@ -27,6 +26,5 @@ def test_infer():
     Runs LegoGPT inference on a simple prompt.
     """
     legogpt = LegoGPT()
-    output_txt = legogpt('A basic chair with four legs.')
-    print(output_txt)
-    LegoStructure.from_txt(output_txt)
+    lego = legogpt('A basic chair with four legs.')
+    print(lego)

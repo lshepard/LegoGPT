@@ -89,7 +89,7 @@ class LegoStructure:
         self.world_dim = world_dim
 
         # Check if structure starts at ground level
-        z0 = min(brick.z for brick in bricks)
+        z0 = min((brick.z for brick in bricks), default=0)
         if z0 != 0:
             warnings.warn('LEGO structure does not start at ground level z=0.')
 
@@ -114,6 +114,11 @@ class LegoStructure:
     def add_brick(self, brick: LegoBrick) -> None:
         self.bricks.append(brick)
         self.voxel_occupancy[brick.slice] += 1
+
+    def undo_add_brick(self) -> None:
+        brick = self.bricks[-1]
+        self.voxel_occupancy[brick.slice] -= 1
+        self.bricks.pop()
 
     def has_collisions(self) -> bool:
         return np.any(self.voxel_occupancy > 1)
