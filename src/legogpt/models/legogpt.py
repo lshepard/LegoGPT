@@ -34,7 +34,11 @@ class LegoGPT:
 
         self.llm = LLM('meta-llama/Llama-3.2-1B-Instruct', self.device)
 
-    def __call__(self, caption: str) -> LegoStructure:
+    def __call__(
+            self,
+            caption: str,
+            return_rejection_reasons: bool = False,
+    ) -> LegoStructure | tuple[LegoStructure, Counter]:
         messages = [
             {'role': 'system', 'content': 'You are a helpful assistant.'},
             {'role': 'user', 'content': create_instruction(caption)},
@@ -42,15 +46,20 @@ class LegoGPT:
         prompt = self.llm.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors='pt')
 
         lego = LegoStructure([])
+        rejection_reasons = Counter()
         for brick_num in range(100):
-            brick, rejection_reasons = self.generate_brick_with_rejection_sampling(
+            brick, rejection_reasons_brick = self.generate_brick_with_rejection_sampling(
                 prompt if brick_num == 0 else None, lego=lego
             )
+            rejection_reasons.update(rejection_reasons_brick)
             if not brick:
                 break
             lego.add_brick(LegoBrick.from_txt(brick))
 
-        return lego
+        if return_rejection_reasons:
+            return lego, rejection_reasons
+        else:
+            return lego
 
     def generate_brick_with_rejection_sampling(
             self,

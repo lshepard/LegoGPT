@@ -57,3 +57,15 @@ def test_floating_check(brick_txt: str, has_floating_bricks: bool):
 def test_stability_check(brick_txt: str, is_stable: bool):
     lego = LegoStructure.from_txt(brick_txt)
     assert lego.is_stable() == is_stable
+
+
+@pytest.mark.parametrize(
+    'brick_txt,is_in_bounds', [
+        ('2x6 (0,0,0)\n', True),
+        ('2x6 (18,0,0)\n', True),
+        ('2x6 (19,0,0)\n', False),
+    ])
+def test_in_bounds(brick_txt: str, is_in_bounds: bool):
+    lego = LegoStructure([], world_dim=20)
+    brick = LegoBrick.from_txt(brick_txt)
+    assert lego.brick_in_bounds(brick) == is_in_bounds

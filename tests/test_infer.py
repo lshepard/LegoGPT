@@ -26,5 +26,6 @@ def test_infer():
     Runs LegoGPT inference on a simple prompt.
     """
     legogpt = LegoGPT()
-    lego = legogpt('A basic chair with four legs.')
+    lego, rejection_reasons = legogpt('A basic chair with four legs.', return_rejection_reasons=True)
     print(lego)
+    print(rejection_reasons)
