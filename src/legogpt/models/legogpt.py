@@ -95,12 +95,11 @@ class LegoGPT:
         except ValueError:  # Brick is badly formatted
             return 'ill_formatted'
 
-        # Try adding brick to the LEGO structure
+        if not lego.brick_in_bounds(brick):
+            return 'out_of_bounds'
         if lego.brick_collides(brick):
-            result = 'collision'
-        else:
-            result = 'success'
-        return result
+            return 'collision'
+        return 'success'
 
     def generate_brick(self, prompt: str | None = None) -> str:
         """

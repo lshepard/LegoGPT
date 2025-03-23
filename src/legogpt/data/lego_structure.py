@@ -120,10 +120,14 @@ class LegoStructure:
         self.voxel_occupancy[brick.slice] -= 1
         self.bricks.pop()
 
+    def brick_in_bounds(self, brick: LegoBrick) -> bool:
+        return (all(slice_.start >= 0 and slice_.stop <= self.world_dim for slice_ in brick.slice_2d)
+                and brick.z >= 0 and brick.z < self.world_dim)
+
     def has_collisions(self) -> bool:
         return np.any(self.voxel_occupancy > 1)
 
-    def brick_collides(self, brick: LegoBrick):
+    def brick_collides(self, brick: LegoBrick) -> bool:
         return np.any(self.voxel_occupancy[brick.slice])
 
     def has_floating_bricks(self) -> bool:
