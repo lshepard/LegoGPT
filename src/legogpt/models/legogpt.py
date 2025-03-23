@@ -37,6 +37,7 @@ class LegoGPT:
     def __call__(
             self,
             caption: str,
+            max_bricks: int = 2000,
             return_rejection_reasons: bool = False,
     ) -> LegoStructure | tuple[LegoStructure, Counter]:
         messages = [
@@ -47,7 +48,7 @@ class LegoGPT:
 
         lego = LegoStructure([])
         rejection_reasons = Counter()
-        for brick_num in range(100):
+        for brick_num in range(max_bricks):
             brick, rejection_reasons_brick = self.generate_brick_with_rejection_sampling(
                 prompt if brick_num == 0 else None, lego=lego
             )
