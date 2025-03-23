@@ -1,4 +1,6 @@
 import re
+import warnings
+import numpy as np
 from dataclasses import dataclass
 
 from legogpt.data.lego_library import lego_library, dimensions_to_brick_id
@@ -81,8 +83,17 @@ class LegoStructure:
     Represents a LEGO structure in the form of a list of LEGO bricks.
     """
 
-    def __init__(self, bricks: list[LegoBrick]):
-        self.bricks = bricks
+    def __init__(self, bricks: list[LegoBrick], world_dim: int = 20):
+        # Check if structure starts at ground level
+        z0 = min(brick.z for brick in bricks)
+        if z0 != 0:
+            warnings.warn('LEGO structure does not start at ground level z=0.')
+
+        # Build structure from bricks
+        self.bricks = []
+        self.voxel_occupancy = np.zeros((world_dim, world_dim, world_dim), dtype=int)
+        for brick in bricks:
+            self.add_brick(brick)
 
     def __len__(self):
         return len(self.bricks)
@@ -95,6 +106,14 @@ class LegoStructure:
 
     def to_txt(self) -> str:
         return ''.join([brick.to_txt() for brick in self.bricks])
+
+    def add_brick(self, brick: LegoBrick):
+        self.bricks.append(brick)
+        self.voxel_occupancy[brick.slice] += 1
+
+    @property
+    def has_collisions(self) -> bool:
+        return np.any(self.voxel_occupancy > 1)
 
     @classmethod
     def from_json(cls, lego_json: dict):

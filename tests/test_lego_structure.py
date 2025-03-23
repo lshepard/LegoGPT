@@ -1,3 +1,5 @@
+import pytest
+
 from legogpt.data.lego_structure import LegoBrick, LegoStructure
 
 
@@ -15,13 +17,23 @@ def test_lego_brick():
 
 
 def test_lego_structure():
-    lego_txt = '2x6 (0,0,0)\n2x6 (0,2,0)\n'
+    lego_txt = '2x6 (0,0,0)\n2x6 (2,0,0)\n'
     lego_json = {
-        '1': {'brick_id': 3, 'x': 0, 'y': 0, 'z': 0, 'ori': 0, },
-        '2': {'brick_id': 3, 'x': 0, 'y': 2, 'z': 0, 'ori': 0, },
+        '1': {'brick_id': 3, 'x': 0, 'y': 0, 'z': 0, 'ori': 0},
+        '2': {'brick_id': 3, 'x': 2, 'y': 0, 'z': 0, 'ori': 0},
     }
 
-    for structure in [LegoStructure.from_json(lego_json), LegoStructure.from_txt(lego_txt)]:
-        assert len(structure) == 2
-        assert structure.to_json() == lego_json
-        assert structure.to_txt() == lego_txt
+    for lego in [LegoStructure.from_json(lego_json), LegoStructure.from_txt(lego_txt)]:
+        assert len(lego) == 2
+        assert lego.to_json() == lego_json
+        assert lego.to_txt() == lego_txt
+
+
+@pytest.mark.parametrize(
+    'brick_txt,has_collisions', [
+        ('2x6 (0,0,0)\n2x6 (2,0,0)\n', False),
+        ('2x6 (0,0,0)\n2x6 (1,0,0)\n', True),
+    ])
+def test_collision_check(brick_txt: str, has_collisions: bool):
+    lego = LegoStructure.from_txt(brick_txt)
+    assert lego.has_collisions == has_collisions
