@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from legogpt.data.lego_library import lego_library, dimensions_to_brick_id
+from legogpt.stability_analysis.stability_analysis import stability_score
 
 
 @dataclass(frozen=True, order=True, kw_only=True)
@@ -110,15 +111,13 @@ class LegoStructure:
     def to_txt(self) -> str:
         return ''.join([brick.to_txt() for brick in self.bricks])
 
-    def add_brick(self, brick: LegoBrick):
+    def add_brick(self, brick: LegoBrick) -> None:
         self.bricks.append(brick)
         self.voxel_occupancy[brick.slice] += 1
 
-    @property
     def has_collisions(self) -> bool:
         return np.any(self.voxel_occupancy > 1)
 
-    @property
     def has_floating_bricks(self) -> bool:
         return any(self._is_floating(brick) for brick in self.bricks)
 
@@ -130,6 +129,15 @@ class LegoStructure:
         if brick.z != self.world_dim - 1 and np.any(self.voxel_occupancy[*brick.slice_2d, brick.z + 1]):
             return False  # Supported from above
         return True
+
+    def is_stable(self) -> bool:
+        if self.has_collisions() or self.has_floating_bricks():
+            return False
+        return self.stability_scores().max() < 1
+
+    def stability_scores(self) -> np.ndarray:
+        score, _, _, _, _ = stability_score(self.to_json(), lego_library)
+        return score
 
     @classmethod
     def from_json(cls, lego_json: dict):
