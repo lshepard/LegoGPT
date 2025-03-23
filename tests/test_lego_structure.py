@@ -37,3 +37,13 @@ def test_lego_structure():
 def test_collision_check(brick_txt: str, has_collisions: bool):
     lego = LegoStructure.from_txt(brick_txt)
     assert lego.has_collisions == has_collisions
+
+
+@pytest.mark.parametrize(
+    'brick_txt,has_floating_bricks', [
+        ('2x6 (0,0,0)\n2x6 (2,0,0)\n', False),
+        ('2x6 (0,0,0)\n2x6 (2,0,1)\n', True),
+    ])
+def test_floating_check(brick_txt: str, has_floating_bricks: bool):
+    lego = LegoStructure.from_txt(brick_txt)
+    assert lego.has_floating_bricks == has_floating_bricks

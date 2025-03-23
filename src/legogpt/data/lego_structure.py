@@ -1,7 +1,8 @@
 import re
 import warnings
-import numpy as np
 from dataclasses import dataclass
+
+import numpy as np
 
 from legogpt.data.lego_library import lego_library, dimensions_to_brick_id
 
@@ -84,6 +85,8 @@ class LegoStructure:
     """
 
     def __init__(self, bricks: list[LegoBrick], world_dim: int = 20):
+        self.world_dim = world_dim
+
         # Check if structure starts at ground level
         z0 = min(brick.z for brick in bricks)
         if z0 != 0:
@@ -114,6 +117,19 @@ class LegoStructure:
     @property
     def has_collisions(self) -> bool:
         return np.any(self.voxel_occupancy > 1)
+
+    @property
+    def has_floating_bricks(self) -> bool:
+        return any(self._is_floating(brick) for brick in self.bricks)
+
+    def _is_floating(self, brick: LegoBrick) -> bool:
+        if brick.z == 0:
+            return False  # Supported by ground
+        if np.any(self.voxel_occupancy[*brick.slice_2d, brick.z - 1]):
+            return False  # Supported from below
+        if brick.z != self.world_dim - 1 and np.any(self.voxel_occupancy[*brick.slice_2d, brick.z + 1]):
+            return False  # Supported from above
+        return True
 
     @classmethod
     def from_json(cls, lego_json: dict):
