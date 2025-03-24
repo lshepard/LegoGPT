@@ -115,13 +115,25 @@ class LegoStructure:
         self.bricks.append(brick)
         self.voxel_occupancy[brick.slice] += 1
 
+    def undo_add_brick(self) -> None:
+        brick = self.bricks[-1]
+        self.voxel_occupancy[brick.slice] -= 1
+        self.bricks.pop()
+
+    def brick_in_bounds(self, brick: LegoBrick) -> bool:
+        return (all(slice_.start >= 0 and slice_.stop <= self.world_dim for slice_ in brick.slice_2d)
+                and 0 <= brick.z < self.world_dim)
+
     def has_collisions(self) -> bool:
         return np.any(self.voxel_occupancy > 1)
 
-    def has_floating_bricks(self) -> bool:
-        return any(self._is_floating(brick) for brick in self.bricks)
+    def brick_collides(self, brick: LegoBrick) -> bool:
+        return np.any(self.voxel_occupancy[brick.slice])
 
-    def _is_floating(self, brick: LegoBrick) -> bool:
+    def has_floating_bricks(self) -> bool:
+        return any(self.brick_floats(brick) for brick in self.bricks)
+
+    def brick_floats(self, brick: LegoBrick) -> bool:
         if brick.z == 0:
             return False  # Supported by ground
         if np.any(self.voxel_occupancy[*brick.slice_2d, brick.z - 1]):
