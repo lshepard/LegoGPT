@@ -3,6 +3,7 @@ import functools
 from collections import Counter
 from typing import Callable
 
+import numpy as np
 import torch
 from transformers.generation.logits_process import PrefixConstrainedLogitsProcessor, LogitsProcessorList
 
@@ -21,16 +22,31 @@ def create_instruction(caption: str) -> str:
     return instruction
 
 
+def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoStructure:
+    """
+    Removes all bricks starting from the first unstable brick. Repeats this process until the lego is stable.
+    """
+    while True:
+        if lego.is_stable:
+            return lego
+        scores = lego.stability_scores()
+        first_unstable_brick_idx = next((i for i, brick in enumerate(lego.bricks)
+                                         if np.any(scores[brick.slice] >= 1)), -1)
+        lego = LegoStructure(lego.bricks[:first_unstable_brick_idx])
+
+
 class LegoGPT:
     def __init__(
             self,
             *,
             world_dim: int = 20,
             temperature: float = 0.6,
+            max_regenerations: int = 100,
             device: str = 'cuda' if torch.cuda.is_available() else 'cpu',
     ):
         self.world_dim = world_dim
         self.temperature = temperature
+        self.max_regenerations = max_regenerations
         self.device = device
 
         self.llm = LLM('/data/apun/finetuned_hf/Llama-3.2-1B-Instruct_finetuned_combined_2', self.device)
@@ -39,14 +55,29 @@ class LegoGPT:
             self,
             caption: str,
             max_bricks: int = 2000,
-            return_rejection_reasons: bool = False,
-    ) -> LegoStructure | tuple[LegoStructure, Counter]:
-        lego, rejection_reasons = self._generate_structure(
-            caption,
-            starting_lego=LegoStructure([]),
-            max_bricks=max_bricks,
-        )
-        return lego, rejection_reasons if return_rejection_reasons else lego
+    ) -> dict:
+        lego = None
+        starting_lego = LegoStructure([])
+        rejection_reasons = Counter()
+        regeneration_num = None
+
+        # Generate LEGO structure. If it is unstable, remove all bricks after the first unstable brick and regenerate.
+        for regeneration_num in range(self.max_regenerations + 1):
+            lego, rejection_reasons_lego = self._generate_structure(
+                caption,
+                starting_lego=starting_lego,
+                max_bricks=max_bricks,
+            )
+            rejection_reasons.update(rejection_reasons_lego)
+            if regeneration_num == self.max_regenerations or lego.is_stable:
+                break
+            starting_lego = _remove_all_bricks_after_first_unstable_brick(lego)
+
+        return {
+            'lego': lego,
+            'rejection_reasons': rejection_reasons,
+            'n_regenerations': regeneration_num,
+        }
 
     def _generate_structure(
             self,

@@ -148,8 +148,8 @@ class LegoStructure:
         return self.stability_scores().max() < 1
 
     def stability_scores(self) -> np.ndarray:
-        score, _, _, _, _ = stability_score(self.to_json(), lego_library)
-        return score
+        scores, _, _, _, _ = stability_score(self.to_json(), lego_library)
+        return scores
 
     @classmethod
     def from_json(cls, lego_json: dict):
