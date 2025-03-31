@@ -18,7 +18,6 @@ class LLM:
             model_name,
             torch_dtype=torch.bfloat16,
             device_map=device,
-            attn_implementation='flash_attention_2',
         ).to(device)
 
         self.kv_cache = None
