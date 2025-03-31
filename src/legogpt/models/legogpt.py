@@ -1,3 +1,4 @@
+import copy
 import functools
 from collections import Counter
 from typing import Callable
@@ -32,7 +33,7 @@ class LegoGPT:
         self.temperature = temperature
         self.device = device
 
-        self.llm = LLM('meta-llama/Llama-3.2-1B-Instruct', self.device)
+        self.llm = LLM('/data/apun/finetuned_hf/Llama-3.2-1B-Instruct_finetuned_combined_2', self.device)
 
     def __call__(
             self,
@@ -40,27 +41,55 @@ class LegoGPT:
             max_bricks: int = 2000,
             return_rejection_reasons: bool = False,
     ) -> LegoStructure | tuple[LegoStructure, Counter]:
+        lego, rejection_reasons = self._generate_structure(
+            caption,
+            starting_lego=LegoStructure([]),
+            max_bricks=max_bricks,
+        )
+        return lego, rejection_reasons if return_rejection_reasons else lego
+
+    def _generate_structure(
+            self,
+            caption: str,
+            starting_lego: LegoStructure = LegoStructure([]),
+            max_bricks: int = 2000,
+    ) -> (LegoStructure, Counter):
+        """
+        Generates a LEGO structure based on the given caption, starting with a partial LEGO structure.
+        :param caption: A caption for the LEGO structure to be generated.
+        :param starting_lego: A partial LEGO structure to which the generated bricks will be added.
+        :param max_bricks: The maximum number of bricks to generate.
+        :return: A tuple containing the generated LEGO structure and a brick rejection reasons.
+        """
+        starting_lego = copy.deepcopy(starting_lego)
+
+        # Construct prompt
+        starting_lego_txt = starting_lego.to_txt()
         messages = [
             {'role': 'system', 'content': 'You are a helpful assistant.'},
             {'role': 'user', 'content': create_instruction(caption)},
         ]
-        prompt = self.llm.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors='pt')
+        if starting_lego_txt:  # Continue generation from a partial structure
+            messages.append({'role': 'assistant', 'content': starting_lego_txt})
+            prompt = self.llm.tokenizer.apply_chat_template(messages, continue_final_message=True, return_tensors='pt')
+            # Setting continue_final_message=True strips whitespace from the end of the last message,
+            # so we need to add back the newline to the end of the prompt
+            prompt[0][-1] = self.llm.tokenizer.convert_tokens_to_ids(self.llm.tokenizer.tokenize(')\n'))[0]
+        else:
+            prompt = self.llm.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors='pt')
 
-        lego = LegoStructure([])
+        # Generate bricks with rejection sampling
         rejection_reasons = Counter()
         for brick_num in range(max_bricks):
             brick, rejection_reasons_brick = self.generate_brick_with_rejection_sampling(
-                prompt if brick_num == 0 else None, lego=lego
+                prompt if brick_num == 0 else None, lego=starting_lego
             )
             rejection_reasons.update(rejection_reasons_brick)
             if not brick:
                 break
-            lego.add_brick(LegoBrick.from_txt(brick))
+            starting_lego.add_brick(LegoBrick.from_txt(brick))
 
-        if return_rejection_reasons:
-            return lego, rejection_reasons
-        else:
-            return lego
+        return starting_lego, rejection_reasons
 
     def generate_brick_with_rejection_sampling(
             self,
