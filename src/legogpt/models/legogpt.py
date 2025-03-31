@@ -125,7 +125,7 @@ class LegoGPT:
         result_ids = []
         for allowed_strs in [
             allowed_dims + (self.llm.tokenizer.eos_token,), ('x',), allowed_dims, (' (',), allowed_posns, (',',),
-            allowed_posns, (',',), allowed_posns, (')\n',),
+            allowed_posns, (',',), allowed_posns, (')\n', ')'),
         ]:
             next_token_id = self.llm(
                 prompt,
