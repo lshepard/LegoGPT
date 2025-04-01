@@ -1,5 +1,7 @@
-from legogpt.models.legogpt import LegoGPT, create_instruction
+from legogpt.models.legogpt import LegoGPT, LegoGPTConfig, create_instruction
 from legogpt.models.llm import LLM
+
+LEGOGPT_PATH = '/data/apun/finetuned_hf/Llama-3.2-1B-Instruct_finetuned_combined_2'
 
 
 def test_llm():
@@ -25,7 +27,7 @@ def test_finetuned_llm():
     """
     Tests running the finetuned LegoGPT model with no other guidance (e.g. rejection sampling).
     """
-    llm = LLM('/data/apun/finetuned_hf/Llama-3.2-1B-Instruct_finetuned_combined_2')
+    llm = LLM(LEGOGPT_PATH)
     messages = [
         {'role': 'system', 'content': 'You are a helpful assistant.'},
         {'role': 'user', 'content': create_instruction('A basic chair with four legs.')},
@@ -39,7 +41,7 @@ def test_infer():
     """
     Runs LegoGPT inference on a simple prompt.
     """
-    legogpt = LegoGPT()
+    legogpt = LegoGPT(LegoGPTConfig(LEGOGPT_PATH))
     output = legogpt('A basic chair with four legs.')
 
     print(output['lego'])

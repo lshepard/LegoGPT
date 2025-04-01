@@ -1,6 +1,7 @@
 import copy
 import functools
 from collections import Counter
+from dataclasses import dataclass, field
 from typing import Callable
 
 import numpy as np
@@ -35,25 +36,52 @@ def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoSt
         lego = LegoStructure(lego.bricks[:first_unstable_brick_idx])
 
 
-class LegoGPT:
-    def __init__(
-            self,
-            *,
-            world_dim: int = 20,
-            max_bricks: int = 2000,
-            max_brick_rejections: int = 100,
-            max_regenerations: int = 100,
-            temperature: float = 0.6,
-            device: str = 'cuda' if torch.cuda.is_available() else 'cpu',
-    ):
-        self.world_dim = world_dim
-        self.max_bricks = max_bricks
-        self.max_brick_rejections = max_brick_rejections
-        self.max_regenerations = max_regenerations
-        self.temperature = temperature
-        self.device = device
+@dataclass
+class LegoGPTConfig:
+    model_name_or_path: str = field(
+        metadata={'help': 'Model checkpoint for weights initialization.'},
+    )
+    world_dim: int = field(
+        default=20,
+        kw_only=True,
+        metadata={'help': 'The dimension of the box in which the generated LEGO should fit. '
+                          'Bricks outside this box are considered out of bounds.'},
+    )
+    max_bricks: int = field(
+        default=2000,
+        kw_only=True,
+        metadata={'help': 'The maximum number of bricks per generated LEGO structure.'},
+    )
+    max_brick_rejections: int = field(
+        default=100,
+        kw_only=True,
+        metadata={'help': 'The maximum number of rejections per generated brick during rejection sampling. '
+                          'Set to 0 if you want to disable rejection sampling.'},
+    )
+    max_regenerations: int = field(
+        default=100,
+        kw_only=True,
+        metadata={'help': 'The maximum number of times to roll back and regenerate the LEGO structure '
+                          'if it is physically unstable. '
+                          'Set to 0 if you want to disable physics-informed rollback.'},
+    )
+    temperature: float = field(
+        default=0.6,
+        kw_only=True,
+        metadata={'help': 'The temperature to use when sampling from the LLM.'},
+    )
 
-        self.llm = LLM('/data/apun/finetuned_hf/Llama-3.2-1B-Instruct_finetuned_combined_2', self.device)
+
+class LegoGPT:
+    def __init__(self, cfg: LegoGPTConfig):
+        self.world_dim = cfg.world_dim
+        self.max_bricks = cfg.max_bricks
+        self.max_brick_rejections = cfg.max_brick_rejections
+        self.max_regenerations = cfg.max_regenerations
+        self.temperature = cfg.temperature
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+        self.llm = LLM(cfg.model_name_or_path, self.device)
 
     def __call__(self, caption: str) -> dict:
         lego = None
