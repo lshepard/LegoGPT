@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from legogpt.data.lego_library import lego_library, dimensions_to_brick_id
+from legogpt.data.lego_library import lego_library, dimensions_to_brick_id, brick_id_to_part_id
 from legogpt.stability_analysis.stability_analysis import stability_score
 
 
@@ -22,6 +22,10 @@ class LegoBrick:
     @property
     def brick_id(self) -> int:
         return dimensions_to_brick_id(self.h, self.w)
+
+    @property
+    def part_id(self) -> str:
+        return brick_id_to_part_id(self.brick_id)
 
     @property
     def ori(self) -> int:
@@ -53,6 +57,14 @@ class LegoBrick:
 
     def to_txt(self) -> str:
         return f'{self.h}x{self.w} ({self.x},{self.y},{self.z})\n'
+
+    def to_ldr(self, base_height: float = 0) -> str:
+        x = (self.x + self.h * 0.5) * 20
+        z = (self.y + self.w * 0.5) * 20
+        y = (self.z + base_height) * -24
+        line = f'1 115 {x} {y} {z} 0 0 1 0 1 0 -1 0 0 {self.part_id}\n'
+        step_line = '0 STEP\n'
+        return line + step_line
 
     @classmethod
     def from_json(cls, brick_json: dict):
@@ -110,6 +122,9 @@ class LegoStructure:
 
     def to_txt(self) -> str:
         return ''.join([brick.to_txt() for brick in self.bricks])
+
+    def to_ldr(self) -> str:
+        return ''.join([brick.to_ldr() for brick in self.bricks])
 
     def add_brick(self, brick: LegoBrick) -> None:
         self.bricks.append(brick)

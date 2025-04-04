@@ -22,11 +22,14 @@ def test_lego_structure():
         '1': {'brick_id': 3, 'x': 0, 'y': 0, 'z': 0, 'ori': 0},
         '2': {'brick_id': 3, 'x': 2, 'y': 0, 'z': 0, 'ori': 0},
     }
+    lego_ldr = '1 115 20.0 0 60.0 0 0 1 0 1 0 -1 0 0 2456.DAT\n0 STEP\n' \
+               '1 115 60.0 0 60.0 0 0 1 0 1 0 -1 0 0 2456.DAT\n0 STEP\n'
 
     for lego in [LegoStructure.from_json(lego_json), LegoStructure.from_txt(lego_txt)]:
         assert len(lego) == 2
         assert lego.to_json() == lego_json
         assert lego.to_txt() == lego_txt
+        assert lego.to_ldr() == lego_ldr
 
 
 @pytest.mark.parametrize(
