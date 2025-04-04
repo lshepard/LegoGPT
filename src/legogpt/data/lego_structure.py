@@ -62,7 +62,8 @@ class LegoBrick:
         x = (self.x + self.h * 0.5) * 20
         z = (self.y + self.w * 0.5) * 20
         y = (self.z + base_height) * -24
-        line = f'1 115 {x} {y} {z} 0 0 1 0 1 0 -1 0 0 {self.part_id}\n'
+        matrix = '0 0 1 0 1 0 -1 0 0' if self.ori == 0 else '-1 0 0 0 1 0 0 0 -1'
+        line = f'1 115 {x} {y} {z} {matrix} {self.part_id}\n'
         step_line = '0 STEP\n'
         return line + step_line
 
