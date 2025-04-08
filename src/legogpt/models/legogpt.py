@@ -157,9 +157,10 @@ class LegoGPT:
                 prompt if brick_num == 0 else None, lego=starting_lego
             )
             rejection_reasons.update(rejection_reasons_brick)
-            if not brick:
-                break
             starting_lego.add_brick(LegoBrick.from_txt(brick))
+
+            if brick[-1] != '\n':  # Generation assumed finished if newline not present
+                break
 
         return starting_lego, rejection_reasons
 
@@ -178,8 +179,6 @@ class LegoGPT:
         for generation_num in range(self.max_brick_rejections + 1):
             self.llm.save_state()
             brick = self.generate_brick(prompt)
-            if not brick:  # Generation is finished
-                break
 
             add_brick_result = self._try_adding_brick(brick, lego, rejected_bricks)
             if add_brick_result == 'success':
@@ -249,8 +248,8 @@ class LegoGPT:
         # Generate tokens one by one to fit the format "hxw (x,y,z)\n"
         result_ids = []
         for allowed_strs in [
-            allowed_dims + (self.llm.tokenizer.eos_token,), ('x',), allowed_dims, (' (',), allowed_posns, (',',),
-            allowed_posns, (',',), allowed_posns, (')\n', ')'),
+            allowed_dims, ('x',), allowed_dims,
+            (' (',), allowed_posns, (',',), allowed_posns, (',',), allowed_posns, (')\n', ')'),
         ]:
             next_token_id = self.llm(
                 prompt,
