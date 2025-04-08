@@ -164,6 +164,8 @@ class LegoStructure:
         return self.stability_scores().max() < 1
 
     def stability_scores(self) -> np.ndarray:
+        if self.has_collisions():
+            raise ValueError('Cannot compute stability scores - structure has colliding bricks.')
         scores, _, _, _, _ = stability_score(self.to_json(), lego_library)
         return scores
 
