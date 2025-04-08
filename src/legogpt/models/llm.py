@@ -32,6 +32,7 @@ class LLM:
             return_as_ids: bool = False,
             max_new_tokens: int = 100,
             temperature: float = 0.8,
+            top_k: int = 50,
             logits_processor: LogitsProcessorList | None = None,
     ) -> str:
         """
@@ -61,6 +62,7 @@ class LLM:
             pad_token_id=self.tokenizer.eos_token_id,
             do_sample=True,
             temperature=temperature,
+            top_k=top_k,
             logits_processor=logits_processor,
             past_key_values=self.kv_cache,
         )

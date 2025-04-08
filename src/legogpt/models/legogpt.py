@@ -78,6 +78,12 @@ class LegoGPTConfig:
         kw_only=True,
         metadata={'help': 'The temperature to use when sampling from the LLM.'},
     )
+    top_k: int = field(
+        default=20,
+        kw_only=True,
+        metadata={'help': 'The number of top tokens to sample from the LLM. '
+                          'Has no effect if use_inference_masking=True.'},
+    )
 
 
 class LegoGPT:
@@ -88,6 +94,7 @@ class LegoGPT:
         self.use_inference_masking = cfg.use_inference_masking
         self.max_regenerations = cfg.max_regenerations
         self.temperature = cfg.temperature
+        self.top_k = cfg.top_k
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         self.llm = LLM(cfg.model_name_or_path, self.device)
