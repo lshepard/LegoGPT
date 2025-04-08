@@ -1,5 +1,6 @@
 import copy
 import functools
+import warnings
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Callable
@@ -93,7 +94,10 @@ class LegoGPT:
         for regeneration_num in range(self.max_regenerations + 1):
             lego, rejection_reasons_lego = self._generate_structure(caption, starting_lego=starting_lego)
             rejection_reasons.update(rejection_reasons_lego)
-            if regeneration_num == self.max_regenerations or lego.is_stable():
+            if lego.is_stable():
+                break
+            if regeneration_num == self.max_regenerations:
+                warnings.warn(f'Failed to generate a stable structure after {self.max_regenerations} attempts.\n')
                 break
             starting_lego = _remove_all_bricks_after_first_unstable_brick(lego)
 
@@ -163,7 +167,11 @@ class LegoGPT:
                 break
 
             add_brick_result = self._try_adding_brick(brick, lego, rejected_bricks)
-            if add_brick_result == 'success' or generation_num == self.max_brick_rejections:
+            if add_brick_result == 'success':
+                break
+            if generation_num == self.max_brick_rejections:
+                warnings.warn(f'Failed to generate a valid brick after {self.max_brick_rejections} attempts.\n'
+                              f'Reasons for rejection: {rejection_reasons}')
                 break
 
             self.llm.rollback_to_saved_state()
