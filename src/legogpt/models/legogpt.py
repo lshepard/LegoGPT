@@ -230,7 +230,7 @@ class LegoGPT:
         result_ids = self.llm(
             prompt,
             return_as_ids=True,
-            max_new_tokens=20,
+            max_new_tokens=10,
             temperature=self.temperature,
             top_k=self.top_k,
         )
