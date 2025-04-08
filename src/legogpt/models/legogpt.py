@@ -28,7 +28,7 @@ def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoSt
     Removes all bricks starting from the first unstable brick. Repeats this process until the lego is stable.
     """
     while True:
-        if lego.is_stable:
+        if lego.is_stable():
             return lego
         scores = lego.stability_scores()
         first_unstable_brick_idx = next((i for i, brick in enumerate(lego.bricks)
@@ -93,7 +93,7 @@ class LegoGPT:
         for regeneration_num in range(self.max_regenerations + 1):
             lego, rejection_reasons_lego = self._generate_structure(caption, starting_lego=starting_lego)
             rejection_reasons.update(rejection_reasons_lego)
-            if regeneration_num == self.max_regenerations or lego.is_stable:
+            if regeneration_num == self.max_regenerations or lego.is_stable():
                 break
             starting_lego = _remove_all_bricks_after_first_unstable_brick(lego)
 
