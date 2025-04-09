@@ -53,7 +53,7 @@ class LegoGPTConfig:
         metadata={'help': 'The maximum number of bricks per generated LEGO structure.'},
     )
     max_brick_rejections: int = field(
-        default=100,
+        default=500,
         kw_only=True,
         metadata={'help': 'The maximum number of rejections per generated brick during rejection sampling. '
                           'Set to 0 if you want to disable rejection sampling.'},
