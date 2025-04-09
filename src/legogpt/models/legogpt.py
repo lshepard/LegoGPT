@@ -83,6 +83,12 @@ class LegoGPTConfig:
         metadata={'help': 'The number of top tokens to sample from the LLM. '
                           'Has no effect if use_inference_masking=True.'},
     )
+    top_p: float = field(
+        default=1.0,
+        kw_only=True,
+        metadata={'help': 'The cumulative probability threshold for nucleus sampling. '
+                          'Has no effect if use_inference_masking=True.'},
+    )
 
 
 class LegoGPT:
@@ -94,6 +100,7 @@ class LegoGPT:
         self.max_regenerations = cfg.max_regenerations
         self.temperature = cfg.temperature
         self.top_k = cfg.top_k
+        self.top_p = cfg.top_p
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         self.llm = LLM(cfg.model_name_or_path, self.device)
@@ -231,6 +238,7 @@ class LegoGPT:
             max_new_tokens=10,
             temperature=self.temperature,
             top_k=self.top_k,
+            top_p=self.top_p,
         )
         return self.llm.tokenizer.decode(result_ids, skip_special_tokens=True)
 
@@ -255,6 +263,8 @@ class LegoGPT:
                 return_as_ids=True,
                 max_new_tokens=1,
                 temperature=self.temperature,
+                top_k=None,
+                top_p=None,
                 logits_processor=self._build_allow_tokens_logits_processor(allowed_strs)
             )[0]
             result_ids.append(next_token_id)

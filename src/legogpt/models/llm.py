@@ -3,7 +3,6 @@ import copy
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.cache_utils import DynamicCache
-from transformers.generation.logits_process import LogitsProcessorList
 
 
 class LLM:
@@ -25,16 +24,7 @@ class LLM:
         self.input_ids_cache = None
         self.input_ids_cache_saved = None
 
-    def __call__(
-            self,
-            prompt: str | torch.Tensor | None = None,
-            *,
-            return_as_ids: bool = False,
-            max_new_tokens: int = 100,
-            temperature: float = 0.8,
-            top_k: int = 50,
-            logits_processor: LogitsProcessorList | None = None,
-    ) -> str:
+    def __call__(self, prompt: str | torch.Tensor | None = None, return_as_ids: bool = False, **kwargs) -> str:
         """
         Generates text, given a prompt.
         """
@@ -58,13 +48,10 @@ class LLM:
         output_ids = self.model.generate(
             input_ids,
             attention_mask=attention_mask,
-            max_new_tokens=max_new_tokens,
             pad_token_id=self.tokenizer.eos_token_id,
             do_sample=True,
-            temperature=temperature,
-            top_k=top_k,
-            logits_processor=logits_processor,
             past_key_values=self.kv_cache,
+            **kwargs,
         )
         self.input_ids_cache = output_ids
 
