@@ -94,8 +94,6 @@ class LegoGPT:
         self.use_inference_masking = cfg.use_inference_masking
         self.max_regenerations = cfg.max_regenerations
         self.temperature = cfg.temperature
-        self.temperature_multiplier = 1.01  # For rejection sampling, amount by which to increase temperature after each rejection
-        self.max_temperature = 2.0
         self.top_k = cfg.top_k
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -178,12 +176,10 @@ class LegoGPT:
         rejected_bricks = set()
 
         brick = ''
-        temperature = self.temperature
         for generation_num in range(self.max_brick_rejections + 1):
             self.llm.save_state()
-            brick = self.generate_brick(prompt, temperature=temperature)
+            brick = self.generate_brick(prompt)
 
-            # Check if the generated brick is valid
             add_brick_result = self._try_adding_brick(brick, lego, rejected_bricks)
             if add_brick_result == 'success':
                 break
@@ -192,13 +188,9 @@ class LegoGPT:
                               f'Reasons for rejection: {rejection_reasons}')
                 break
 
-            # Reset if brick is invalid
             self.llm.rollback_to_saved_state()
             rejection_reasons.update([add_brick_result])
             rejected_bricks.add(brick)
-
-            if add_brick_result == 'already_rejected':  # Increase temperature if brick has already been generated and rejected
-                temperature = min(self.max_temperature, temperature * self.temperature_multiplier)
 
         return brick, rejection_reasons
 
@@ -222,50 +214,34 @@ class LegoGPT:
             return 'collision'
         return 'success'
 
-    def generate_brick(self, prompt: str | None = None, temperature: float | None = None) -> str:
-        if temperature is None:
-            temperature = self.temperature
+    def generate_brick(self, prompt: str | None = None) -> str:
         if self.use_inference_masking:
-            return self._generate_brick_with_inference_masking(prompt, temperature)
+            return self._generate_brick_with_inference_masking(prompt)
         else:
-            return self._generate_brick_no_inference_masking(prompt, temperature)
+            return self._generate_brick_no_inference_masking(prompt)
 
-    def _generate_brick_no_inference_masking(
-            self,
-            prompt: str | None = None,
-            temperature: float | None = None,
-    ) -> str:
+    def _generate_brick_no_inference_masking(self, prompt: str | None = None) -> str:
         """
         Generates a LEGO brick in txt format without logit masking.
         :param prompt: The prompt to be given to the LLM preceding brick generation.
         :return: A LEGO brick in txt format, or the empty string if generation is finished.
         """
-        if temperature is None:
-            temperature = self.temperature
-
         result_ids = self.llm(
             prompt,
             return_as_ids=True,
             max_new_tokens=10,
-            temperature=temperature,
+            temperature=self.temperature,
             top_k=self.top_k,
         )
         return self.llm.tokenizer.decode(result_ids, skip_special_tokens=True)
 
-    def _generate_brick_with_inference_masking(
-            self,
-            prompt: str | None = None,
-            temperature: float | None = None,
-    ) -> str:
+    def _generate_brick_with_inference_masking(self, prompt: str | None = None) -> str:
         """
         Generates a LEGO brick in txt format, using logit masking to enforce compliance with the LEGO brick syntax.
         WARNING: Assumes each number in the brick dimensions and positions is represented by 1 token.
         :param prompt: The prompt to be given to the LLM preceding brick generation.
         :return: A LEGO brick in txt format, or the empty string if generation is finished.
         """
-        if temperature is None:
-            temperature = self.temperature
-
         allowed_dims = tuple(str(i) for i in range(1, max_brick_dimension + 1))
         allowed_posns = tuple(str(i) for i in range(self.world_dim))
 
@@ -279,7 +255,7 @@ class LegoGPT:
                 prompt,
                 return_as_ids=True,
                 max_new_tokens=1,
-                temperature=temperature,
+                temperature=self.temperature,
                 logits_processor=self._build_allow_tokens_logits_processor(allowed_strs)
             )[0]
             result_ids.append(next_token_id)
