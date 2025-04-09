@@ -4,11 +4,11 @@ from dataclasses import dataclass
 import gurobipy as gp
 from gurobipy import GRB
 
-from legogpt.stability_analysis.utils import *
+from .utils import *
 
 
 @dataclass
-class StabilityCfg:
+class StabilityConfig:
     g: float = 9.8
     T: float = 100
     brick_unit_height: float = 0.0096
@@ -20,7 +20,7 @@ class StabilityCfg:
     beta: float = 0.000001
 
 
-def stability_score(lego_structure, lego_library, cfg=StabilityCfg()):
+def stability_score(lego_structure, lego_library, cfg=StabilityConfig()):
     ############### Setup ###############
     brick_library = lego_library
     g_ = cfg.g  # N/kg

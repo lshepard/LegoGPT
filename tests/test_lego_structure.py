@@ -1,6 +1,6 @@
 import pytest
 
-from legogpt.data.lego_structure import LegoBrick, LegoStructure
+from legogpt.data import LegoBrick, LegoStructure
 
 
 def test_lego_brick():

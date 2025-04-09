@@ -4,8 +4,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from legogpt.data.lego_library import lego_library, dimensions_to_brick_id, brick_id_to_part_id
-from legogpt.stability_analysis.stability_analysis import stability_score
+from legogpt.stability_analysis import stability_score
+from .lego_library import lego_library, dimensions_to_brick_id, brick_id_to_part_id
 
 
 @dataclass(frozen=True, order=True, kw_only=True)

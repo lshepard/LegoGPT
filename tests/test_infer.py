@@ -1,5 +1,4 @@
-from legogpt.models.legogpt import LegoGPT, LegoGPTConfig, create_instruction
-from legogpt.models.llm import LLM
+from legogpt.models import LLM, LegoGPT, LegoGPTConfig, create_instruction
 
 LEGOGPT_PATH = '/data/apun/finetuned_hf/Llama-3.2-1B-Instruct_finetuned_combined_2'
 

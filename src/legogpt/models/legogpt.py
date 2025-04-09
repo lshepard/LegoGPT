@@ -9,9 +9,8 @@ import numpy as np
 import torch
 from transformers.generation.logits_process import PrefixConstrainedLogitsProcessor, LogitsProcessorList
 
-from legogpt.data.lego_library import max_brick_dimension
-from legogpt.data.lego_structure import LegoStructure, LegoBrick
-from legogpt.models.llm import LLM
+from legogpt.data import max_brick_dimension, LegoStructure, LegoBrick
+from .llm import LLM
 
 
 def create_instruction(caption: str) -> str:

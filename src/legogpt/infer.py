@@ -1,11 +1,13 @@
+import transformers
 from transformers import HfArgumentParser
 
-from legogpt.models.legogpt import LegoGPT, LegoGPTConfig
+from legogpt.models import LegoGPT, LegoGPTConfig
 
 
 def main():
     parser = HfArgumentParser(LegoGPTConfig)
-    cfg, extra_args = parser.parse_args_into_dataclasses(return_remaining_strings=True)
+    (cfg,) = parser.parse_args_into_dataclasses()
+    transformers.set_seed(42)
 
     legogpt = LegoGPT(cfg)
     while True:
@@ -15,6 +17,7 @@ def main():
         print('Generating...')
         output = legogpt(prompt)
         print(output['lego'])
+        print('Brick rejection reasons:', output['rejection_reasons'])
 
 
 if __name__ == '__main__':
