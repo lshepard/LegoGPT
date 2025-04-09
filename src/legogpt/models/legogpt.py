@@ -58,7 +58,7 @@ class LegoGPTConfig:
         metadata={'help': 'The maximum number of rejections per generated brick during rejection sampling. '
                           'Set to 0 if you want to disable rejection sampling.'},
     )
-    use_inference_masking: bool = field(
+    use_logit_masking: bool = field(
         default=False,
         kw_only=True,
         metadata={'help': 'Whether to use logit masking during inference '
@@ -81,13 +81,13 @@ class LegoGPTConfig:
         default=20,
         kw_only=True,
         metadata={'help': 'The number of top tokens to sample from the LLM. '
-                          'Has no effect if use_inference_masking=True.'},
+                          'Has no effect if use_logit_masking=True.'},
     )
     top_p: float = field(
         default=1.0,
         kw_only=True,
         metadata={'help': 'The cumulative probability threshold for nucleus sampling. '
-                          'Has no effect if use_inference_masking=True.'},
+                          'Has no effect if use_logit_masking=True.'},
     )
 
 
@@ -96,7 +96,7 @@ class LegoGPT:
         self.world_dim = cfg.world_dim
         self.max_bricks = cfg.max_bricks
         self.max_brick_rejections = cfg.max_brick_rejections
-        self.use_inference_masking = cfg.use_inference_masking
+        self.use_logit_masking = cfg.use_logit_masking
         self.max_regenerations = cfg.max_regenerations
         self.temperature = cfg.temperature
         self.top_k = cfg.top_k
@@ -223,7 +223,7 @@ class LegoGPT:
         return 'success'
 
     def generate_brick(self, prompt: str | None = None) -> str:
-        if self.use_inference_masking:
+        if self.use_logit_masking:
             return self._generate_brick_with_inference_masking(prompt)
         else:
             return self._generate_brick_no_inference_masking(prompt)
