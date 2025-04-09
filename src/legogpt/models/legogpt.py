@@ -191,7 +191,9 @@ class LegoGPT:
                 break
             if generation_num == self.max_brick_rejections:
                 warnings.warn(f'Failed to generate a valid brick after {self.max_brick_rejections} attempts.\n'
-                              f'Reasons for rejection: {rejection_reasons}')
+                              f'Last generated brick: {brick}\n'
+                              f'Reasons for rejection: {rejection_reasons}\n'
+                              f'Lego structure: {lego.to_txt()}\n')
                 break
 
             self.llm.rollback_to_saved_state()
