@@ -16,8 +16,11 @@ def main():
             break
         print('Generating...')
         output = legogpt(prompt)
+
         print(output['lego'])
+        print('# of bricks:', len(output['lego']))
         print('Brick rejection reasons:', output['rejection_reasons'])
+        print('# regenerations:', output['n_regenerations'])
 
 
 if __name__ == '__main__':
