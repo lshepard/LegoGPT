@@ -84,13 +84,7 @@ class LegoBrick:
             raise ValueError(f'Text Format brick is ill-formatted: {brick_txt}')
 
         h, w, x, y, z = map(int, match.group(1, 2, 3, 4, 5))
-        brick = cls(h=h, w=w, x=x, y=y, z=z)
-
-        try:
-            _ = brick.brick_id
-        except ValueError as err:
-            raise ValueError(f'Text Format brick ID is not in library: {err}')
-        return brick
+        return cls(h=h, w=w, x=x, y=y, z=z)
 
 
 class LegoStructure:

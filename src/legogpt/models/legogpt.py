@@ -215,6 +215,10 @@ class LegoGPT:
             brick = LegoBrick.from_txt(brick_str)
         except ValueError:  # Brick is badly formatted
             return 'ill_formatted'
+        try:
+            _ = brick.brick_id
+        except ValueError:  # Brick ID is not in library
+            return 'not_in_library'
 
         if not lego.brick_in_bounds(brick):
             return 'out_of_bounds'
