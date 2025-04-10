@@ -118,7 +118,7 @@ class LegoGPT:
             if lego.is_stable():
                 break
             if regeneration_num == self.max_regenerations:
-                warnings.warn(f'Failed to generate a stable structure after {self.max_regenerations} attempts.\n')
+                warnings.warn(f'Failed to generate a stable structure after {self.max_regenerations + 1} attempts.\n')
                 break
             starting_lego = _remove_all_bricks_after_first_unstable_brick(lego)
 
@@ -190,7 +190,7 @@ class LegoGPT:
             if add_brick_result == 'success':
                 break
             if generation_num == self.max_brick_rejections:
-                warnings.warn(f'Failed to generate a valid brick after {self.max_brick_rejections} attempts.\n'
+                warnings.warn(f'Failed to generate a valid brick after {self.max_brick_rejections + 1} attempts.\n'
                               f'Last generated brick: {brick}\n'
                               f'Reasons for rejection: {rejection_reasons}\n'
                               f'Lego structure: {lego.to_txt()}\n')
