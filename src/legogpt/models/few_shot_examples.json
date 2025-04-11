@@ -1,0 +1,107 @@
+[
+  {
+    "object_id": "ac97ffc6b6ef238382c3b56998e08a4c",
+    "category_id": "02818832",
+    "structure_name": "task_graph1",
+    "caption": "Bed with rectangular base and straight headboard.",
+    "is_stable": 1,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Create a LEGO model of the input. Format your response as a list of bricks: <brick dimensions> <brick position>, where the brick position is (x,y,z).\nAllowed brick dimensions are 2x4, 4x2, 2x6, 6x2, 1x2, 2x1, 1x4, 4x1, 1x6, 6x1, 1x8, 8x1, 1x1, 2x2.\nAll bricks are 1 unit tall.\n\n### Input:\nBed with rectangular base and straight headboard."
+      },
+      {
+        "role": "assistant",
+        "content": "1x2 (13,18,0)\n1x2 (13,2,0)\n2x2 (0,18,0)\n2x2 (0,2,0)\n2x6 (12,14,1)\n2x6 (12,8,1)\n2x6 (12,2,1)\n6x2 (6,18,1)\n6x2 (6,2,1)\n6x2 (0,18,1)\n2x2 (0,16,1)\n2x6 (0,10,1)\n2x6 (0,4,1)\n6x2 (0,2,1)\n2x1 (12,17,2)\n2x2 (12,15,2)\n2x6 (12,9,2)\n2x6 (12,3,2)\n6x2 (8,18,2)\n4x1 (8,3,2)\n6x1 (8,2,2)\n6x2 (2,18,2)\n6x2 (2,2,2)\n2x1 (0,19,2)\n2x6 (0,13,2)\n2x1 (0,12,2)\n2x4 (0,8,2)\n2x6 (0,2,2)\n1x1 (13,19,3)\n2x6 (11,13,3)\n2x6 (11,5,3)\n4x1 (9,19,3)\n2x2 (9,13,3)\n2x6 (9,5,3)\n4x2 (7,17,3)\n4x2 (7,15,3)\n6x2 (7,11,3)\n6x2 (7,3,3)\n6x2 (3,13,3)\n4x2 (3,11,3)\n6x2 (3,9,3)\n6x2 (3,7,3)\n6x2 (3,5,3)\n4x2 (3,3,3)\n8x1 (1,19,3)\n6x2 (1,17,3)\n6x2 (1,15,3)\n2x6 (1,9,3)\n2x6 (1,3,3)\n1x1 (0,19,3)\n1x6 (12,12,4)\n1x8 (12,4,4)\n2x6 (10,10,4)\n2x6 (10,4,4)\n4x2 (8,16,4)\n2x6 (8,10,4)\n2x6 (8,4,4)\n8x1 (6,19,4)\n2x6 (6,12,4)\n2x2 (6,10,4)\n2x6 (6,4,4)\n2x6 (4,10,4)\n2x6 (4,4,4)\n4x2 (2,16,4)\n2x6 (2,10,4)\n2x6 (2,4,4)\n6x1 (0,19,4)\n6x1 (8,19,5)\n8x1 (0,19,5)\n1x1 (13,19,6)\n4x1 (9,19,6)\n8x1 (1,19,6)\n1x1 (0,19,6)"
+      }
+    ]
+  },
+  {
+    "object_id": "f23d3a85baabd7ae32d9baba75737e72",
+    "category_id": "03001627",
+    "structure_name": "task_graph",
+    "caption": "Simple chair with straight backrest and square seat.",
+    "is_stable": 1,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Create a LEGO model of the input. Format your response as a list of bricks: <brick dimensions> <brick position>, where the brick position is (x,y,z).\nAllowed brick dimensions are 2x4, 4x2, 2x6, 6x2, 1x2, 2x1, 1x4, 4x1, 1x6, 6x1, 1x8, 8x1, 1x1, 2x2.\nAll bricks are 1 unit tall.\n\n### Input:\nSimple chair with straight backrest and square seat."
+      },
+      {
+        "role": "assistant",
+        "content": "2x2 (5,18,0)\n2x2 (5,13,0)\n2x2 (0,18,0)\n2x2 (0,13,0)\n2x2 (5,18,1)\n2x2 (5,13,1)\n2x2 (0,18,1)\n2x2 (0,13,1)\n2x2 (5,18,2)\n2x2 (5,13,2)\n2x2 (0,18,2)\n2x2 (0,13,2)\n2x2 (5,18,3)\n2x2 (5,13,3)\n2x2 (0,18,3)\n2x2 (0,13,3)\n2x2 (5,18,4)\n2x2 (5,13,4)\n2x2 (0,18,4)\n2x2 (0,13,4)\n2x2 (5,18,5)\n2x2 (5,13,5)\n2x2 (0,18,5)\n2x2 (0,13,5)\n2x2 (5,18,6)\n2x2 (5,13,6)\n2x2 (0,18,6)\n2x2 (0,13,6)\n2x2 (5,18,7)\n2x2 (5,13,7)\n2x2 (0,18,7)\n2x2 (0,13,7)\n1x1 (6,19,8)\n1x6 (6,13,8)\n2x6 (4,13,8)\n1x6 (3,13,8)\n2x6 (1,13,8)\n6x1 (0,19,8)\n1x6 (0,13,8)\n1x1 (6,17,9)\n1x4 (6,13,9)\n6x2 (1,18,9)\n1x2 (0,18,9)\n6x1 (0,17,9)\n6x2 (0,15,9)\n6x2 (0,13,9)\n1x2 (6,18,10)\n6x2 (0,18,10)\n6x2 (1,18,11)\n1x2 (0,18,11)\n1x2 (6,18,12)\n6x2 (0,18,12)\n6x2 (1,18,13)\n1x2 (0,18,13)\n1x2 (6,18,14)\n6x2 (0,18,14)\n6x2 (1,18,15)\n1x2 (0,18,15)\n1x2 (6,18,16)\n6x2 (0,18,16)\n6x2 (1,18,17)\n1x2 (0,18,17)"
+      }
+    ]
+  },
+  {
+    "object_id": "962a500ebd7175dc702cb0c2071c40aa",
+    "category_id": "02871439",
+    "structure_name": "task_graph",
+    "caption": "Bookshelf with three horizontal tiers.",
+    "is_stable": 1,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Create a LEGO model of the input. Format your response as a list of bricks: <brick dimensions> <brick position>, where the brick position is (x,y,z).\nAllowed brick dimensions are 2x4, 4x2, 2x6, 6x2, 1x2, 2x1, 1x4, 4x1, 1x6, 6x1, 1x8, 8x1, 1x1, 2x2.\nAll bricks are 1 unit tall.\n\n### Input:\nBookshelf with three horizontal tiers."
+      },
+      {
+        "role": "assistant",
+        "content": "4x1 (8,19,0)\n6x2 (6,17,0)\n6x2 (6,15,0)\n8x1 (0,19,0)\n6x2 (0,17,0)\n6x2 (0,15,0)\n1x4 (11,16,1)\n2x2 (9,18,1)\n4x1 (8,15,1)\n4x2 (7,16,1)\n6x2 (3,18,1)\n1x2 (2,18,1)\n6x2 (1,16,1)\n2x2 (0,18,1)\n1x2 (0,16,1)\n8x1 (0,15,1)\n1x1 (11,17,2)\n1x2 (11,15,2)\n6x2 (6,18,2)\n4x2 (2,18,2)\n2x1 (0,19,2)\n2x4 (0,15,2)\n1x1 (11,19,3)\n1x4 (11,15,3)\n4x2 (7,18,3)\n6x2 (1,18,3)\n1x2 (1,16,3)\n1x4 (0,16,3)\n2x1 (0,15,3)\n4x1 (8,19,4)\n6x2 (6,17,4)\n6x2 (6,15,4)\n8x1 (0,19,4)\n6x2 (0,17,4)\n6x2 (0,15,4)\n2x4 (10,16,5)\n1x4 (9,16,5)\n4x1 (8,15,5)\n2x2 (7,16,5)\n6x2 (3,18,5)\n1x2 (2,18,5)\n6x2 (1,16,5)\n2x2 (0,18,5)\n1x2 (0,16,5)\n8x1 (0,15,5)\n1x1 (11,19,6)\n1x4 (11,15,6)\n6x2 (5,18,6)\n1x2 (4,18,6)\n2x2 (2,18,6)\n2x1 (0,19,6)\n2x4 (0,15,6)\n1x1 (11,17,7)\n1x2 (11,15,7)\n6x2 (6,18,7)\n6x2 (0,18,7)\n2x1 (0,17,7)\n2x2 (0,15,7)\n2x4 (10,15,8)\n1x4 (9,15,8)\n4x1 (8,19,8)\n2x4 (7,15,8)\n1x2 (6,15,8)\n6x2 (1,17,8)\n8x1 (0,19,8)\n1x2 (0,17,8)\n6x2 (0,15,8)\n1x2 (11,18,9)\n1x1 (11,15,9)\n6x2 (6,16,9)\n6x2 (5,18,9)\n1x2 (4,18,9)\n8x1 (3,15,9)\n1x1 (2,15,9)\n4x2 (0,18,9)\n6x2 (0,16,9)\n2x1 (0,15,9)\n1x1 (11,17,10)\n1x2 (11,15,10)\n6x2 (6,18,10)\n6x2 (0,18,10)\n2x1 (0,17,10)\n2x2 (0,15,10)\n1x4 (11,15,11)\n2x1 (10,19,11)\n1x1 (10,18,11)\n2x2 (8,18,11)\n6x2 (2,18,11)\n2x1 (0,19,11)\n2x4 (0,15,11)\n1x2 (11,18,12)\n1x1 (11,17,12)\n2x1 (9,19,12)\n6x2 (6,15,12)\n6x2 (5,17,12)\n8x1 (1,19,12)\n4x2 (1,17,12)\n1x2 (0,18,12)\n1x1 (0,17,12)\n6x2 (0,15,12)\n2x4 (10,16,13)\n4x1 (8,15,13)\n4x2 (6,18,13)\n4x2 (6,16,13)\n6x2 (0,18,13)\n6x2 (0,16,13)\n8x1 (0,15,13)\n1x1 (11,19,14)\n1x4 (11,15,14)\n6x2 (5,18,14)\n1x2 (4,18,14)\n2x2 (2,18,14)\n2x1 (0,19,14)\n2x4 (0,15,14)\n1x1 (11,17,15)\n1x2 (11,15,15)\n6x2 (6,18,15)\n6x2 (0,18,15)\n2x1 (0,17,15)\n2x2 (0,15,15)\n1x2 (11,17,16)\n4x1 (8,19,16)\n4x2 (7,17,16)\n6x2 (6,15,16)\n6x2 (1,17,16)\n8x1 (0,19,16)\n1x2 (0,17,16)\n6x2 (0,15,16)\n4x1 (8,15,17)\n6x2 (6,18,17)\n6x2 (6,16,17)\n6x2 (0,18,17)\n6x2 (0,16,17)\n8x1 (0,15,17)"
+      }
+    ]
+  },
+  {
+    "object_id": "109567d7d55b8fe515a520abec2f04dd",
+    "category_id": "02958343",
+    "structure_name": "task_graph",
+    "caption": "A minimalist car with a compact, boxy structure.",
+    "is_stable": 1,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Create a LEGO model of the input. Format your response as a list of bricks: <brick dimensions> <brick position>, where the brick position is (x,y,z).\nAllowed brick dimensions are 2x4, 4x2, 2x6, 6x2, 1x2, 2x1, 1x4, 4x1, 1x6, 6x1, 1x8, 8x1, 1x1, 2x2.\nAll bricks are 1 unit tall.\n\n### Input:\nA minimalist car with a compact, boxy structure."
+      },
+      {
+        "role": "assistant",
+        "content": "1x2 (8,4,0)\n1x1 (7,4,0)\n2x4 (6,14,0)\n2x2 (6,5,0)\n2x4 (1,14,0)\n2x1 (1,6,0)\n2x2 (1,4,0)\n1x2 (0,5,0)\n1x1 (8,4,1)\n1x1 (7,10,1)\n1x2 (7,8,1)\n2x1 (7,5,1)\n2x6 (6,13,1)\n2x2 (6,11,1)\n2x6 (4,11,1)\n4x2 (4,6,1)\n2x1 (4,5,1)\n4x2 (4,3,1)\n2x1 (4,2,1)\n1x2 (3,2,1)\n4x2 (2,17,1)\n2x6 (2,11,1)\n2x2 (2,4,1)\n1x8 (1,11,1)\n6x1 (1,10,1)\n6x2 (1,8,1)\n1x1 (1,4,1)\n2x1 (1,3,1)\n4x2 (0,6,1)\n2x1 (0,5,1)\n1x1 (7,18,2)\n1x8 (7,6,2)\n2x4 (6,14,2)\n2x1 (6,3,2)\n1x4 (5,14,2)\n2x2 (5,6,2)\n4x2 (5,4,2)\n1x2 (5,2,2)\n2x2 (3,2,2)\n1x4 (2,4,2)\n1x1 (2,3,2)\n6x2 (1,18,2)\n2x4 (1,14,2)\n1x1 (1,13,2)\n1x6 (1,7,2)\n1x2 (1,3,2)\n1x1 (0,7,2)\n2x2 (0,5,2)\n1x1 (8,5,3)\n1x8 (7,11,3)\n1x8 (7,3,3)\n2x6 (5,14,3)\n2x4 (5,3,3)\n2x1 (4,2,3)\n2x2 (3,18,3)\n2x1 (3,3,3)\n1x1 (3,2,3)\n1x6 (2,14,3)\n1x1 (1,19,3)\n1x8 (1,11,3)\n1x4 (1,7,3)\n2x4 (1,3,3)\n1x2 (0,5,3)\n1x1 (7,17,4)\n1x8 (7,9,4)\n2x4 (6,5,4)\n2x1 (6,4,4)\n1x1 (6,3,4)\n2x1 (4,19,4)\n2x6 (4,3,4)\n1x1 (3,19,4)\n6x1 (2,18,4)\n2x6 (2,3,4)\n1x1 (1,18,4)\n1x8 (1,10,4)\n1x4 (1,4,4)\n2x2 (0,8,4)\n2x1 (6,18,5)\n2x4 (6,14,5)\n2x6 (6,8,5)\n1x2 (5,17,5)\n1x2 (5,8,5)\n1x1 (4,18,5)\n1x2 (3,17,5)\n2x2 (3,8,5)\n2x4 (1,15,5)\n2x1 (1,14,5)\n2x6 (1,8,5)\n1x2 (6,15,6)\n2x6 (5,9,6)\n1x6 (4,9,6)\n4x2 (3,17,6)\n1x2 (2,17,6)\n4x2 (2,15,6)\n2x6 (2,9,6)\n1x1 (1,12,6)"
+      }
+    ]
+  },
+  {
+    "object_id": "3532707a0addc62e13680f9c7026bd5b",
+    "category_id": "04379243",
+    "structure_name": "task_graph1",
+    "caption": "Square table with four legs and a flat surface.",
+    "is_stable": 1,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Create a LEGO model of the input. Format your response as a list of bricks: <brick dimensions> <brick position>, where the brick position is (x,y,z).\nAllowed brick dimensions are 2x4, 4x2, 2x6, 6x2, 1x2, 2x1, 1x4, 4x1, 1x6, 6x1, 1x8, 8x1, 1x1, 2x2.\nAll bricks are 1 unit tall.\n\n### Input:\nSquare table with four legs and a flat surface."
+      },
+      {
+        "role": "assistant",
+        "content": "2x2 (16,18,0)\n2x2 (16,8,0)\n1x1 (15,18,0)\n1x1 (15,9,0)\n2x2 (0,18,0)\n2x2 (0,8,0)\n1x1 (17,18,1)\n1x1 (17,9,1)\n2x1 (16,19,1)\n2x1 (16,8,1)\n2x1 (15,18,1)\n2x1 (15,9,1)\n2x2 (0,18,1)\n2x2 (0,8,1)\n2x2 (16,18,2)\n2x2 (16,8,2)\n1x1 (15,18,2)\n1x1 (15,9,2)\n2x2 (0,18,2)\n2x2 (0,8,2)\n1x1 (17,18,3)\n1x1 (17,9,3)\n2x1 (16,19,3)\n2x1 (16,8,3)\n2x1 (15,18,3)\n2x1 (15,9,3)\n2x2 (0,18,3)\n2x2 (0,8,3)\n2x2 (16,18,4)\n2x2 (16,8,4)\n1x1 (15,18,4)\n1x1 (15,9,4)\n2x2 (0,18,4)\n2x2 (0,8,4)\n1x1 (17,18,5)\n1x1 (17,9,5)\n2x1 (16,19,5)\n2x1 (16,8,5)\n2x1 (15,18,5)\n2x1 (15,9,5)\n2x2 (0,18,5)\n2x2 (0,8,5)\n2x2 (16,18,6)\n2x2 (16,8,6)\n1x1 (15,18,6)\n1x1 (15,9,6)\n2x2 (0,18,6)\n2x2 (0,8,6)\n1x1 (17,18,7)\n1x1 (17,9,7)\n2x1 (16,19,7)\n2x1 (16,8,7)\n2x1 (15,18,7)\n2x1 (15,9,7)\n2x2 (0,18,7)\n2x2 (0,8,7)\n2x2 (16,18,8)\n2x2 (16,8,8)\n1x1 (15,18,8)\n1x1 (15,9,8)\n1x8 (14,10,8)\n2x6 (12,10,8)\n2x6 (10,10,8)\n6x2 (8,16,8)\n2x6 (8,10,8)\n2x6 (6,10,8)\n2x6 (4,10,8)\n6x2 (2,16,8)\n2x6 (2,10,8)\n2x2 (0,18,8)\n2x2 (0,8,8)\n2x2 (16,18,9)\n2x2 (16,8,9)\n6x2 (10,17,9)\n6x2 (10,15,9)\n6x2 (10,13,9)\n6x2 (10,11,9)\n6x2 (10,9,9)\n1x2 (9,17,9)\n1x8 (9,9,9)\n2x6 (7,13,9)\n2x4 (7,9,9)\n2x6 (5,13,9)\n2x6 (3,13,9)\n2x6 (1,13,9)\n6x2 (1,11,9)\n6x2 (1,9,9)\n2x1 (0,19,9)\n1x1 (0,18,9)\n1x1 (0,9,9)\n2x1 (0,8,9)\n1x4 (17,16,10)\n1x8 (17,8,10)\n2x6 (15,14,10)\n2x6 (15,8,10)\n2x6 (13,14,10)\n2x6 (13,8,10)\n2x6 (11,14,10)\n2x6 (11,8,10)\n2x6 (9,14,10)\n2x6 (9,8,10)\n1x4 (8,16,10)\n1x8 (8,8,10)\n2x6 (6,14,10)\n2x6 (6,8,10)\n2x6 (4,8,10)\n2x6 (2,8,10)\n6x2 (0,18,10)\n6x2 (0,16,10)\n6x2 (0,14,10)\n2x6 (0,8,10)\n2x6 (16,11,11)\n4x1 (14,10,11)\n4x2 (14,8,11)\n1x1 (13,10,11)\n1x2 (13,8,11)\n6x1 (12,19,11)\n6x2 (12,17,11)\n6x2 (10,15,11)\n6x2 (10,13,11)\n6x2 (10,11,11)\n2x6 (8,11,11)\n1x4 (7,13,11)\n1x1 (7,11,11)\n6x2 (7,9,11)\n6x1 (7,8,11)\n6x2 (6,17,11)\n8x1 (4,19,11)\n6x2 (1,15,11)\n6x2 (1,13,11)\n6x2 (1,10,11)\n6x2 (1,8,11)\n4x1 (0,19,11)\n6x2 (0,17,11)\n1x4 (0,13,11)\n8x1 (0,12,11)\n1x4 (0,8,11)"
+      }
+    ]
+  }
+]
