@@ -1,8 +1,10 @@
 import copy
 import functools
+import json
 import warnings
 from collections import Counter
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Callable, Literal
 
 import numpy as np
@@ -29,15 +31,31 @@ def create_instruction_zero_shot(caption: str) -> str:
         '2x4 (2,1,0)\n'
         'DO NOT output any other text. Only output LEGO bricks. The first brick should have a z-coordinate of 0.'
     )
-    return create_instruction(caption) + '\n\n' + zero_shot_instructions
+    return '\n\n'.join([create_instruction(caption), zero_shot_instructions])
+
+
+_few_shot_examples_filename = Path(__file__).parent / 'few_shot_examples.json'
+with open(_few_shot_examples_filename) as f:
+    _few_shot_examples = json.load(f)
 
 
 def create_instruction_few_shot(caption: str) -> str:
-    # few_shot_instructions = 'An example output is as follows. Do not copy the output, but design your own.\n'
-    # return (create_instruction(caption) + '\n\n'
-    #         + create_instruction_zero_shot(caption) + '\n\n'
-    #         + few_shot_instructions)
-    raise NotImplementedError
+    example_prompt = 'Here are some example LEGO models:'
+    example_instructions = '\n\n'.join(_create_example_instruction(x) for x in _few_shot_examples)
+    few_shot_instructions = (
+        'Do NOT copy the examples, but create your own LEGO model for the following input.\n\n'
+        '### Input:\n'
+        f'{caption}\n\n'
+        '### Output:\n'
+    )
+    return '\n\n'.join([create_instruction_zero_shot(caption), example_prompt,
+                        example_instructions, few_shot_instructions])
+
+
+def _create_example_instruction(x: dict) -> str:
+    caption = x['caption']
+    lego_txt = x['messages'][-1]['content']
+    return f'### Input:\n{caption}\n\n### Output:\n{lego_txt}'
 
 
 def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoStructure:
