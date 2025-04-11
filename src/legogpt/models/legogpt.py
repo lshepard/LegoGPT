@@ -3,7 +3,7 @@ import functools
 import warnings
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import Callable, Literal
 
 import numpy as np
 import torch
@@ -21,6 +21,23 @@ def create_instruction(caption: str) -> str:
                    '### Input:\n'
                    f'{caption}')
     return instruction
+
+
+def create_instruction_zero_shot(caption: str) -> str:
+    zero_shot_instructions = (
+        'Each line of your output should be a LEGO brick in the format `<brick dimensions> <brick position>`. For example:\n'
+        '2x4 (2,1,0)\n'
+        'DO NOT output any other text. Only output LEGO bricks. The first brick should have a z-coordinate of 0.'
+    )
+    return create_instruction(caption) + '\n\n' + zero_shot_instructions
+
+
+def create_instruction_few_shot(caption: str) -> str:
+    # few_shot_instructions = 'An example output is as follows. Do not copy the output, but design your own.\n'
+    # return (create_instruction(caption) + '\n\n'
+    #         + create_instruction_zero_shot(caption) + '\n\n'
+    #         + few_shot_instructions)
+    raise NotImplementedError
 
 
 def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoStructure:
@@ -89,6 +106,11 @@ class LegoGPTConfig:
         metadata={'help': 'The cumulative probability threshold for nucleus sampling. '
                           'Has no effect if use_logit_masking=True.'},
     )
+    instruction_format: Literal['legogpt', 'few_shot', 'zero_shot'] = field(
+        default='legogpt',
+        kw_only=True,
+        metadata={'help': 'The format of the LEGO-generating instruction to give to the LLM.'},
+    )
 
 
 class LegoGPT:
@@ -102,6 +124,13 @@ class LegoGPT:
         self.top_k = cfg.top_k
         self.top_p = cfg.top_p
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+        instruction_fns = {
+            'legogpt': create_instruction,
+            'few_shot': create_instruction_few_shot,
+            'zero_shot': create_instruction_zero_shot,
+        }
+        self.instruction_fn = instruction_fns[cfg.instruction_format]
 
         self.llm = LLM(cfg.model_name_or_path, self.device)
 
@@ -145,7 +174,7 @@ class LegoGPT:
         starting_lego_txt = starting_lego.to_txt()
         messages = [
             {'role': 'system', 'content': 'You are a helpful assistant.'},
-            {'role': 'user', 'content': create_instruction(caption)},
+            {'role': 'user', 'content': self.instruction_fn(caption)},
         ]
         if starting_lego_txt:  # Continue generation from a partial structure
             messages.append({'role': 'assistant', 'content': starting_lego_txt})
