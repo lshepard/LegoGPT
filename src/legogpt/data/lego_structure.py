@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from legogpt.stability_analysis import stability_score
+from legogpt.stability_analysis import stability_score, StabilityConfig
 from .lego_library import lego_library, dimensions_to_brick_id, brick_id_to_part_id
 
 
@@ -130,6 +130,9 @@ class LegoStructure:
         self.voxel_occupancy[brick.slice] -= 1
         self.bricks.pop()
 
+    def has_out_of_bounds_bricks(self) -> bool:
+        return any(not self.brick_in_bounds(brick) for brick in self.bricks)
+
     def brick_in_bounds(self, brick: LegoBrick) -> bool:
         return (all(slice_.start >= 0 and slice_.stop <= self.world_dim for slice_ in brick.slice_2d)
                 and 0 <= brick.z < self.world_dim)
@@ -153,14 +156,17 @@ class LegoStructure:
         return True
 
     def is_stable(self) -> bool:
-        if self.has_collisions() or self.has_floating_bricks():
+        if self.has_floating_bricks():
             return False
         return self.stability_scores().max() < 1
 
     def stability_scores(self) -> np.ndarray:
         if self.has_collisions():
             raise ValueError('Cannot compute stability scores - structure has colliding bricks.')
-        scores, _, _, _, _ = stability_score(self.to_json(), lego_library)
+        if self.has_out_of_bounds_bricks():
+            raise ValueError('Cannot compute stability scores - structure has out of bounds bricks.')
+        scores, _, _, _, _ = stability_score(self.to_json(), lego_library,
+                                             StabilityConfig(world_dimension=(self.world_dim,) * 3))
         return scores
 
     @classmethod
