@@ -50,6 +50,7 @@ class LLM:
             attention_mask=attention_mask,
             pad_token_id=self.tokenizer.eos_token_id,
             do_sample=True,
+            num_return_sequences=1,
             past_key_values=self.kv_cache,
             **kwargs,
         )
