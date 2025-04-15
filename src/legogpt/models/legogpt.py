@@ -112,6 +112,17 @@ class LegoGPTConfig:
         kw_only=True,
         metadata={'help': 'The temperature to use when sampling from the LLM.'},
     )
+    temperature_increase: float = field(
+        default=0.01,
+        kw_only=True,
+        metadata={'help': 'The amount by which to increase the temperature '
+                          'after each "already_rejected" brick during rejection sampling.'},
+    )
+    max_temperature: float = field(
+        default=2.0,
+        kw_only=True,
+        metadata={'help': 'The maximum temperature to increase to during rejection sampling.'},
+    )
     top_k: int = field(
         default=20,
         kw_only=True,
@@ -139,8 +150,8 @@ class LegoGPT:
         self.use_logit_masking = cfg.use_logit_masking
         self.max_regenerations = cfg.max_regenerations
         self.temperature = cfg.temperature
-        self.temperature_multiplier = 1.01  # For rejection sampling, amount by which to increase temperature after each rejection
-        self.max_temperature = 2.0
+        self.temperature_increase = cfg.temperature_increase
+        self.max_temperature = cfg.max_temperature
         self.top_k = cfg.top_k
         self.top_p = cfg.top_p
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -255,7 +266,7 @@ class LegoGPT:
             rejected_bricks.add(brick)
 
             if add_brick_result == 'already_rejected':  # Increase temperature if brick has already been generated and rejected
-                temperature = min(self.max_temperature, temperature * self.temperature_multiplier)
+                temperature = min(self.max_temperature, temperature + self.temperature_increase)
 
         return brick, rejection_reasons
 
