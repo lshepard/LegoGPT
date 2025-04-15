@@ -108,7 +108,7 @@ class LegoGPTConfig:
                           'Set to 0 if you want to disable physics-informed rollback.'},
     )
     temperature: float = field(
-        default=0.6,
+        default=0.8,
         kw_only=True,
         metadata={'help': 'The temperature to use when sampling from the LLM.'},
     )
