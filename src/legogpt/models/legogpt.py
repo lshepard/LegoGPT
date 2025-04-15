@@ -287,11 +287,11 @@ class LegoGPT:
         if temperature is None:
             temperature = self.temperature
         if self.use_logit_masking:
-            return self._generate_brick_with_inference_masking(prompt, temperature)
+            return self._generate_brick_with_logit_masking(prompt, temperature)
         else:
-            return self._generate_brick_no_inference_masking(prompt, temperature)
+            return self._generate_brick_no_logit_masking(prompt, temperature)
 
-    def _generate_brick_no_inference_masking(
+    def _generate_brick_no_logit_masking(
             self,
             prompt: str | None = None,
             temperature: float | None = None,
@@ -314,7 +314,7 @@ class LegoGPT:
         )
         return self.llm.tokenizer.decode(result_ids, skip_special_tokens=True)
 
-    def _generate_brick_with_inference_masking(
+    def _generate_brick_with_logit_masking(
             self,
             prompt: str | None = None,
             temperature: float | None = None,
