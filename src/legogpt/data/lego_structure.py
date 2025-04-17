@@ -156,7 +156,7 @@ class LegoStructure:
         return True
 
     def is_stable(self) -> bool:
-        if self.has_floating_bricks():
+        if self.has_floating_bricks() or self.has_collisions():
             return False
         return self.stability_scores().max() < 1
 
