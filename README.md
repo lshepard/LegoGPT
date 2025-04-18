@@ -10,12 +10,18 @@ licence [here](https://www.gurobi.com/academia/academic-program-and-licenses/).
 ### Installing as a standalone project
 
 This repo uses the Python project manager uv. To install this repo as a standalone project,
-simply [install uv](https://docs.astral.sh/uv/getting-started/installation/). The remaining dependencies will be
-downloaded and installed upon invoking `uv run`.
+simply clone the repo:
+
+```zsh
+git clone "git@github.com:AvaLovelace1/LegoGPT.git"
+```
+
+Then [install uv](https://docs.astral.sh/uv/getting-started/installation/). A virtual environment will be created, and
+the remaining dependencies installed automatically, upon invoking `uv run [SCRIPT_NAME]`.
 
 ### Installing as a package
 
-You can also install this repo as a package in your own project via
+To install this repo as a package in your own Python project, run
 
 ```zsh
 uv add "git+ssh://git@github.com/AvaLovelace1/LegoGPT.git"
