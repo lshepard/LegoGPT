@@ -20,15 +20,16 @@ args=(
     --max_length 8192
 
     # Training parameters
-    --per_device_train_batch_size 1
-    --per_device_eval_batch_size 1
-    --gradient_accumulation_steps 2
-    --learning_rate 0.001
+    --per_device_train_batch_size 2
+    --per_device_eval_batch_size 2
+    --gradient_accumulation_steps 4
+    --learning_rate 0.002
     --lr_scheduler_type cosine
     --warmup_steps 100
-    --num_train_epochs 5
-    --eval_steps 1000
-    --save_steps 5000
+    --num_train_epochs 3
+    --eval_steps 250
+    --save_steps 500
+    --load_best_model_at_end
 
     # Optimizations
     --bf16
