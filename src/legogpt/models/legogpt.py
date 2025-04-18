@@ -94,7 +94,7 @@ class LegoGPTConfig:
                           'Set to 0 if you want to disable rejection sampling.'},
     )
     use_logit_masking: bool = field(
-        default=False,
+        default=True,
         kw_only=True,
         metadata={'help': 'Whether to use logit masking during inference '
                           'to enforce compliance with the LEGO brick syntax. '
@@ -108,7 +108,7 @@ class LegoGPTConfig:
                           'Set to 0 if you want to disable physics-informed rollback.'},
     )
     temperature: float = field(
-        default=0.8,
+        default=0.6,
         kw_only=True,
         metadata={'help': 'The temperature to use when sampling from the LLM.'},
     )
