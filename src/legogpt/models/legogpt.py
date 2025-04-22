@@ -164,7 +164,6 @@ class LegoGPT:
             brick, rejection_reasons_brick = self.generate_brick_with_rejection_sampling(
                 prompt if brick_num == 0 else None, lego=starting_lego
             )
-            print(brick)
             if not brick:  # EOS token was generated
                 break
             rejection_reasons.update(rejection_reasons_brick)
