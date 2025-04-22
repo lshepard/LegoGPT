@@ -48,7 +48,7 @@ class LLM:
         output_ids = self.model.generate(
             input_ids,
             attention_mask=attention_mask,
-            pad_token_id=self.tokenizer.eos_token_id,
+            pad_token_id=self.tokenizer.pad_token_id,
             do_sample=True,
             num_return_sequences=1,
             past_key_values=self.kv_cache,

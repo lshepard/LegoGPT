@@ -15,62 +15,6 @@ from legogpt.data import max_brick_dimension, LegoStructure, LegoBrick
 from .llm import LLM
 
 
-def create_instruction(caption: str) -> str:
-    instruction = ('Create a LEGO model of the input. Format your response as a list of bricks: '
-                   '<brick dimensions> <brick position>, where the brick position is (x,y,z).\n'
-                   'Allowed brick dimensions are 2x4, 4x2, 2x6, 6x2, 1x2, 2x1, 1x4, 4x1, 1x6, 6x1, 1x8, 8x1, 1x1, 2x2.\n'
-                   'All bricks are 1 unit tall.\n\n'
-                   '### Input:\n'
-                   f'{caption}')
-    return instruction
-
-
-def create_instruction_zero_shot(caption: str) -> str:
-    zero_shot_instructions = (
-        'Each line of your output should be a LEGO brick in the format `<brick dimensions> <brick position>`. For example:\n'
-        '2x4 (2,1,0)\n'
-        'DO NOT output any other text. Only output LEGO bricks. The first brick should have a z-coordinate of 0.'
-    )
-    return '\n\n'.join([create_instruction(caption), zero_shot_instructions])
-
-
-_few_shot_examples_filename = Path(__file__).parent / 'few_shot_examples.json'
-with open(_few_shot_examples_filename) as f:
-    _few_shot_examples = json.load(f)
-
-
-def create_instruction_few_shot(caption: str) -> str:
-    example_prompt = 'Here are some example LEGO models:'
-    example_instructions = '\n\n'.join(_create_example_instruction(x) for x in _few_shot_examples)
-    few_shot_instructions = (
-        'Do NOT copy the examples, but create your own LEGO model for the following input.\n\n'
-        '### Input:\n'
-        f'{caption}\n\n'
-        '### Output:\n'
-    )
-    return '\n\n'.join([create_instruction_zero_shot(caption), example_prompt,
-                        example_instructions, few_shot_instructions])
-
-
-def _create_example_instruction(x: dict) -> str:
-    caption = x['caption']
-    lego_txt = x['messages'][-1]['content']
-    return f'### Input:\n{caption}\n\n### Output:\n{lego_txt}'
-
-
-def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoStructure:
-    """
-    Removes all bricks starting from the first unstable brick. Repeats this process until the lego is stable.
-    """
-    while True:
-        if lego.is_stable():
-            return lego
-        scores = lego.stability_scores()
-        first_unstable_brick_idx = next((i for i, brick in enumerate(lego.bricks)
-                                         if np.any(scores[brick.slice] >= 1)), -1)
-        lego = LegoStructure(lego.bricks[:first_unstable_brick_idx])
-
-
 @dataclass
 class LegoGPTConfig:
     model_name_or_path: str = field(
@@ -211,9 +155,6 @@ class LegoGPT:
         if starting_lego_txt:  # Continue generation from a partial structure
             messages.append({'role': 'assistant', 'content': starting_lego_txt})
             prompt = self.llm.tokenizer.apply_chat_template(messages, continue_final_message=True, return_tensors='pt')
-            # Setting continue_final_message=True strips whitespace from the end of the last message,
-            # so we need to add back the newline to the end of the prompt
-            prompt[0][-1] = self.llm.tokenizer.convert_tokens_to_ids(self.llm.tokenizer.tokenize(')\n'))[0]
         else:
             prompt = self.llm.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors='pt')
 
@@ -223,11 +164,11 @@ class LegoGPT:
             brick, rejection_reasons_brick = self.generate_brick_with_rejection_sampling(
                 prompt if brick_num == 0 else None, lego=starting_lego
             )
+            print(brick)
+            if not brick:  # EOS token was generated
+                break
             rejection_reasons.update(rejection_reasons_brick)
             starting_lego.add_brick(LegoBrick.from_txt(brick))
-
-            if brick[-1] != '\n':  # Generation assumed finished if newline not present
-                break
 
         return starting_lego, rejection_reasons
 
@@ -247,6 +188,8 @@ class LegoGPT:
         for generation_num in range(self.max_brick_rejections + 1):
             self.llm.save_state()
             brick = self.generate_brick(prompt, temperature=temperature)
+            if not brick:  # EOS token was generated
+                break
 
             # Check if the generated brick is valid
             add_brick_result = self._try_adding_brick(brick, lego, rejected_bricks)
@@ -345,8 +288,8 @@ class LegoGPT:
         # Generate tokens one by one to fit the format "hxw (x,y,z)\n"
         result_ids = []
         for allowed_strs in [
-            allowed_dims, ('x',), allowed_dims,
-            (' (',), allowed_posns, (',',), allowed_posns, (',',), allowed_posns, (')\n', ')'),
+            allowed_dims + (self.llm.tokenizer.eos_token,), ('x',), allowed_dims,
+            (' (',), allowed_posns, (',',), allowed_posns, (',',), allowed_posns, (')\n',),
         ]:
             next_token_id = self.llm(
                 prompt,
@@ -389,3 +332,59 @@ class LegoGPT:
             return allowed_ids
 
         return allowed_token_ids_fn
+
+
+def create_instruction(caption: str) -> str:
+    instruction = ('Create a LEGO model of the input. Format your response as a list of bricks: '
+                   '<brick dimensions> <brick position>, where the brick position is (x,y,z).\n'
+                   'Allowed brick dimensions are 2x4, 4x2, 2x6, 6x2, 1x2, 2x1, 1x4, 4x1, 1x6, 6x1, 1x8, 8x1, 1x1, 2x2.\n'
+                   'All bricks are 1 unit tall.\n\n'
+                   '### Input:\n'
+                   f'{caption}')
+    return instruction
+
+
+def create_instruction_zero_shot(caption: str) -> str:
+    zero_shot_instructions = (
+        'Each line of your output should be a LEGO brick in the format `<brick dimensions> <brick position>`. For example:\n'
+        '2x4 (2,1,0)\n'
+        'DO NOT output any other text. Only output LEGO bricks. The first brick should have a z-coordinate of 0.'
+    )
+    return '\n\n'.join([create_instruction(caption), zero_shot_instructions])
+
+
+_few_shot_examples_filename = Path(__file__).parent / 'few_shot_examples.json'
+with open(_few_shot_examples_filename) as f:
+    _few_shot_examples = json.load(f)
+
+
+def create_instruction_few_shot(caption: str) -> str:
+    example_prompt = 'Here are some example LEGO models:'
+    example_instructions = '\n\n'.join(_create_example_instruction(x) for x in _few_shot_examples)
+    few_shot_instructions = (
+        'Do NOT copy the examples, but create your own LEGO model for the following input.\n\n'
+        '### Input:\n'
+        f'{caption}\n\n'
+        '### Output:\n'
+    )
+    return '\n\n'.join([create_instruction_zero_shot(caption), example_prompt,
+                        example_instructions, few_shot_instructions])
+
+
+def _create_example_instruction(x: dict) -> str:
+    caption = x['caption']
+    lego_txt = x['messages'][-1]['content']
+    return f'### Input:\n{caption}\n\n### Output:\n{lego_txt}'
+
+
+def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoStructure:
+    """
+    Removes all bricks starting from the first unstable brick. Repeats this process until the lego is stable.
+    """
+    while True:
+        if lego.is_stable():
+            return lego
+        scores = lego.stability_scores()
+        first_unstable_brick_idx = next((i for i, brick in enumerate(lego.bricks)
+                                         if np.any(scores[brick.slice] >= 1)), -1)
+        lego = LegoStructure(lego.bricks[:first_unstable_brick_idx])
