@@ -13,18 +13,20 @@ class LLM:
     def __init__(self, model_name: str, device: str = 'cuda' if torch.cuda.is_available() else 'cpu'):
         self.device = device
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype='auto',
-            device_map=device,
-        ).to(device)
+        self.model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 
         self.kv_cache = None
         self.kv_cache_saved = None
         self.input_ids_cache = None
         self.input_ids_cache_saved = None
 
-    def __call__(self, prompt: str | torch.Tensor | None = None, return_as_ids: bool = False, **kwargs) -> str:
+    def __call__(
+            self,
+            prompt: str | torch.Tensor | None = None,
+            return_as_ids: bool = False,
+            return_dict: bool = False,
+            **kwargs,
+    ):
         """
         Generates text, given a prompt.
         """
@@ -45,21 +47,24 @@ class LLM:
             attention_mask = torch.ones_like(input_ids)
 
         # Run generation
-        output_ids = self.model.generate(
+        output_dict = self.model.generate(
             input_ids,
             attention_mask=attention_mask,
-            pad_token_id=self.tokenizer.eos_token_id,
+            pad_token_id=self.tokenizer.pad_token_id,
             do_sample=True,
             num_return_sequences=1,
             past_key_values=self.kv_cache,
+            return_dict_in_generate=True,
             **kwargs,
         )
-        self.input_ids_cache = output_ids
+        self.input_ids_cache = output_dict['sequences']
 
         # Return result as token ids or as a string
         input_length = input_ids.shape[1]
-        result_ids = output_ids[0][input_length:]
-        return result_ids if return_as_ids else self.tokenizer.decode(result_ids)
+        result_ids = output_dict['sequences'][0][input_length:]
+        result = result_ids if return_as_ids else self.tokenizer.decode(result_ids)
+
+        return (result, output_dict) if return_dict else result
 
     def reset_cache(self) -> None:
         self.kv_cache = DynamicCache()
