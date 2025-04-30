@@ -9,15 +9,14 @@ licence [here](https://www.gurobi.com/academia/academic-program-and-licenses/).
 
 ### Installing as a standalone project
 
-This repo uses the Python project manager uv. To install this repo as a standalone project,
-simply clone the repo:
+This repo uses the Python project manager uv. To install this repo as a standalone project:
 
-```zsh
-git clone "git@github.com:AvaLovelace1/LegoGPT.git"
-```
-
-Then [install uv](https://docs.astral.sh/uv/getting-started/installation/). A virtual environment will be created, and
-the remaining dependencies installed automatically, upon invoking `uv run [SCRIPT_NAME]`.
+1. Clone the repo: `git clone "git@github.com:AvaLovelace1/LegoGPT.git" && cd LegoGPT`.
+2. Some files in the ImportLDraw submodule (required for rendering LEGO visualizations) are stored using the Git LFS
+   system. To download these files, install [Git LFS](https://git-lfs.com), `cd` into the ImportLDraw directory, and run
+   `git lfs pull`.
+3. Finally, [install uv](https://docs.astral.sh/uv/getting-started/installation/). A virtual environment will be
+   created, and the remaining dependencies installed automatically, upon invoking `uv run [SCRIPT_NAME]`.
 
 ### Installing as a package
 
@@ -42,9 +41,9 @@ uv run accelerate config  # Initialize the Accelerate config file
 uv run ./finetune.zsh
 ```
 
-## Running inference
+## Running inference interactively
 
-Run inference with a finetuned LegoGPT model using:
+Run inference with an interactive CLI using:
 
 ```zsh
 uv run infer --model_name_or_path MODEL_PATH
