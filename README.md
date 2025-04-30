@@ -58,9 +58,12 @@ instructions:
    paper.
 2. Prepare the dataset for finetuning with
    `uv run prepare_finetuning_dataset --input_path LEGO_DATASET_PATH --output_path FINETUNING_DATASET_PATH`.
-3. Download the pretrained [Llama-3.2-1B-Instruct model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct).
+3. Download the pretrained [Llama-3.2-1B-Instruct model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) to
+   some directory `[PRETRAINED_DIR]`.
    **IMPORTANT:** Replace the `config.json`, `special_tokens_map.json`, and `tokenizer_config.json` files with the ones
    in the `finetuning_config_files` directory. This specifies the `pad_token` to be different from the `eos_token`,
    fixing a fine-tuning [issue](https://github.com/unslothai/unsloth/issues/416) where the model will not learn to
    output EOS tokens properly.
-4. Run finetuning with `uv run accelerate config && uv run ./finetune.zsh`.
+4. Initialize the Accelerate config file with `uv run accelerate config`.
+5. Run finetuning with `uv run ./finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [FINETUNING_DATASET_PATH]`. The
+   finetuned model will be saved to `[OUTPUT_DIR]/[RUN_NAME]`.
