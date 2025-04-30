@@ -13,11 +13,7 @@ class LLM:
     def __init__(self, model_name: str, device: str = 'cuda' if torch.cuda.is_available() else 'cpu'):
         self.device = device
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype='auto',
-            device_map=device,
-        ).to(device)
+        self.model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 
         self.kv_cache = None
         self.kv_cache_saved = None
