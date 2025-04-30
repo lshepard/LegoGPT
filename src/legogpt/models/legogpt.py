@@ -371,9 +371,7 @@ def create_instruction_few_shot(caption: str) -> str:
 
 
 def _create_example_instruction(x: dict) -> str:
-    caption = x['caption']
-    lego_txt = x['messages'][-1]['content']
-    return f'### Input:\n{caption}\n\n### Output:\n{lego_txt}'
+    return f'### Input:\n{x["caption"]}\n\n### Output:\n{x["lego"]}'
 
 
 def _remove_all_bricks_after_first_unstable_brick(lego: LegoStructure) -> LegoStructure:
