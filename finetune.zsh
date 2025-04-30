@@ -1,21 +1,19 @@
 #!/usr/bin/zsh
 
-# Usage: ./finetune.zsh [RUN_NAME] [DATASET_NAME] [HF_TOKEN]
+# Usage: ./finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [DATASET_NAME]
 
-ROOT_DIR="/grogu/user/apun"
-RUN_NAME="${1}"
-DATASET_NAME="${2}"
-
-export HF_HOME="${ROOT_DIR}/.cache/huggingface"
-export HF_TOKEN="${3}"
+PRETRAINED_DIR="${1}"
+OUTPUT_DIR="${2}"
+RUN_NAME="${3}"
+DATASET_NAME="${4}"
 
 args=(
-    --model_name_or_path "${ROOT_DIR}/checkpoints_hf/meta-llama/Llama-3.2-1B-Instruct" # LLaMA model with modified tokenizer - no cutoff date system message
+    --model_name_or_path "${PRETRAINED_DIR}"
     --do_train
     --eval_strategy steps
 
     # Dataset parameters
-    --dataset_name "${ROOT_DIR}/${DATASET_NAME}"
+    --dataset_name "${DATASET_NAME}"
     --dataloader_num_workers 4
     --max_length 8192
 
@@ -42,7 +40,7 @@ args=(
     --lora_target_modules q_proj v_proj
 
     # Output parameters
-    --output_dir "${ROOT_DIR}/finetuned_hf/${RUN_NAME}"
+    --output_dir "${OUTPUT_DIR}/${RUN_NAME}"
     --run_name "${RUN_NAME}"
     --report_to wandb
 )
