@@ -20,6 +20,9 @@ def render_lego(
         fov: float = 45,
         img_resolution: int = 512,
 ) -> None:
+    in_file = os.path.abspath(in_file)
+    out_file = os.path.abspath(out_file)
+
     plugin_path = Path(ImportLDraw.__file__).parent
     ldraw_lib_path = Path.home() / 'ldraw'
 
@@ -121,10 +124,8 @@ def main():
     args = parser.parse_args()
 
     # Get the absolute path of the input file
-    in_file = os.path.abspath(args.in_file)
-    out_file = os.path.abspath(args.out_file)
-    render_lego(in_file, out_file, square_image=True, instructions_look=False)
-    print(f'Rendered image to {out_file}')
+    render_lego(args.in_file, args.out_file, square_image=True, instructions_look=False)
+    print(f'Rendered image to {args.out_file}')
 
 
 if __name__ == '__main__':
