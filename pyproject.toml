@@ -21,6 +21,7 @@ dependencies = [
 [project.scripts]
 infer = "legogpt.infer:main"
 prepare_finetuning_dataset = "legogpt.prepare_finetuning_dataset:main"
+render_lego = "legogpt.render_lego:main"
 
 [build-system]
 requires = ["hatchling"]
