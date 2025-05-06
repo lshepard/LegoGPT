@@ -7,6 +7,9 @@ from pathlib import Path
 
 import bpy
 
+# Add path to ImportLDraw module
+sys.path.append(str(Path(__file__).parents[2]))
+
 import ImportLDraw
 from ImportLDraw.loadldraw.loadldraw import Options, Configure, loadFromFile, FileSystem
 
