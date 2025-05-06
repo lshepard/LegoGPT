@@ -49,6 +49,49 @@ uv run infer --model_name_or_path MODEL_PATH
 This script starts an interactive session where you can input a prompt and get a response from the model. See
 `uv run infer -h` for a full list of options.
 
+### Example interaction
+
+Here is an example interaction using the `infer` script:
+
+```zsh
+uv run infer --model_name_or_path '/data/apun/finetuned_hf/LegoGPT'
+```
+
+```text
+Enter a prompt, or <Return> to exit: Table featuring a flat rectangular surface over four evenly spaced legs.
+Enter a filename to save the output image (default=output.png): output.png
+Enter a generation seed (default=42): 42
+Generating...
+Set parameter Username
+Academic license - for non-commercial use only - expires 2026-02-19
+--------------------
+Finished generating in 63.53s.
+Total # bricks: 59
+Total # brick rejections: 98
+Brick rejection reasons: {'collision': 5, 'already_rejected': 93}
+Total # regenerations: 4
+Saved results to /home/apun/LegoGPT/output.txt, /home/apun/LegoGPT/output.ldr, and /home/apun/LegoGPT/output.png
+--------------------
+Enter another prompt, or <Return> to exit:
+```
+
+`output.png` contains a rendered image of the generated LEGO structure:
+
+![Output image](output_img.png)
+
+`output.txt` contains the LEGO structure in brick-by-brick text format:
+
+```text
+1x2 (16,18,0)
+1x2 (16,13,0)
+2x2 (0,18,0)
+2x2 (0,13,0)
+1x2 (16,18,1)
+[...]
+```
+
+`output.ldr` contains the LEGO structure in LDraw format, which can be opened with any LDraw-compatible software.
+
 ## Fine-tuning LegoGPT
 
 We use Hugging Face [TRL](https://huggingface.co/docs/trl/index)
