@@ -75,11 +75,13 @@ Saved results to /home/apun/LegoGPT/output.txt, /home/apun/LegoGPT/output.ldr, a
 Enter another prompt, or <Return> to exit:
 ```
 
+Three output files are created: `output.png`, `output.txt`, and `output.ldr`.
+
 `output.png` contains a rendered image of the generated LEGO structure:
 
-![Output image](output_img.png)
+<img src="output_img.png" alt="Rendered LEGO output image" width="256"/>
 
-`output.txt` contains the LEGO structure in brick-by-brick text format:
+`output.txt` contains the LEGO structure in brick-by-brick text format, where each line of the form `hxw (x,y,z)` represents a LEGO brick of height `h` and width `w` at position `(x,y,z)`:
 
 ```text
 1x2 (16,18,0)
@@ -90,7 +92,7 @@ Enter another prompt, or <Return> to exit:
 [...]
 ```
 
-`output.ldr` contains the LEGO structure in LDraw format, which can be opened with any LDraw-compatible software.
+And finally, `output.ldr` contains the LEGO structure in LDraw format, which can be opened with any LDraw-compatible software.
 
 ## Fine-tuning LegoGPT
 
