@@ -87,7 +87,8 @@ Three output files are created: `output.png`, `output.txt`, and `output.ldr`.
 
 <img src="output_img.png" alt="Rendered LEGO output image" width="256"/>
 
-`output.txt` contains the LEGO structure in brick-by-brick text format, where each line of the form `hxw (x,y,z)` represents a LEGO brick of height `h` and width `w` at position `(x,y,z)`:
+`output.txt` contains the LEGO structure in brick-by-brick text format, where each line of the form `hxw (x,y,z)`
+represents a LEGO brick of height `h` and width `w` at position `(x,y,z)`:
 
 ```text
 1x2 (16,18,0)
@@ -98,7 +99,8 @@ Three output files are created: `output.png`, `output.txt`, and `output.ldr`.
 [...]
 ```
 
-And finally, `output.ldr` contains the LEGO structure in LDraw format, which can be opened with any LDraw-compatible software.
+And finally, `output.ldr` contains the LEGO structure in LDraw format, which can be opened with any LDraw-compatible
+software.
 
 ## Running fine-tuning
 
@@ -114,9 +116,9 @@ To replicate the fine-tuning process, follow these instructions:
    `uv run prepare_finetuning_dataset --input_path AvaLovelace/StableText2Lego --output_path [FINETUNING_DATASET_PATH]`.
    This converts the dataset into the instructional format required for fine-tuning LLaMA.
     - If you wish to run fine-tuning with your own LEGO dataset, replace `AvaLovelace/StableText2Lego` with the path to
-      your dataset. This dataset should have the fields "caption" and "lego". The "caption" field should contain a
-      description of a LEGO structure, and the "lego" field should contain the corresponding LEGO structure, in the text
-      format described in the paper.
+      your dataset. This dataset should have the fields "captions" and "lego". The "lego" field should contain a LEGO
+      structure in the text format described in the paper, and the "captions" field should contain a list of one or more
+      descriptions of the LEGO structure.
 2. Download the pretrained [Llama-3.2-1B-Instruct model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) to
    some directory `[PRETRAINED_DIR]`.
    **IMPORTANT:** Replace the `config.json`, `special_tokens_map.json`, and `tokenizer_config.json` files with the ones
