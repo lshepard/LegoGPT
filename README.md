@@ -1,18 +1,23 @@
 # LegoGPT
 
+This is the official repository for **LegoGPT**, the first approach for generating physically stable LEGO
+brick models from text prompts.
+
 ## Installation
 
-### Prerequisites
+### Prerequisites: Gurobi
 
 Running stability analysis requires a [Gurobi licence](https://www.gurobi.com/downloads/) to use Gurobi. Academics may
 request a free licence from the Gurobi website [here](https://www.gurobi.com/academia/academic-program-and-licenses/).
 
 ### Installing as a standalone project
 
-This repo uses the Python project manager uv. To install this repo as a standalone project:
+This repo uses the Python project manager [uv](https://docs.astral.sh/uv/). To install this repo as a standalone
+project, first install all prerequisites. Then,
 
-1. Clone the repo: `git clone "git@github.com:AvaLovelace1/LegoGPT.git" && cd LegoGPT`.
-2. Install the following dependencies required for rendering LEGO visualizations:
+1. Clone the repo: `git clone "https://github.com/AvaLovelace1/LegoGPT.git" && cd LegoGPT`.
+2. *(Optional, required for running the `infer` script)* Install the following dependencies required for rendering LEGO
+   visualizations:
     - Install the ImportLDraw submodule with `git submodule init && git submodule update`.
     - Some files in the ImportLDraw submodule are stored using the Git LFS system. To download these files,
       install [Git LFS](https://git-lfs.com), `cd` into the ImportLDraw directory, and run
@@ -24,16 +29,16 @@ This repo uses the Python project manager uv. To install this repo as a standalo
 
 ### Installing as a package
 
-To install this repo as a package in your own Python project, run
+To install this repo as a package in your own Python project, first install all prerequisites. Then, run
 
 ```zsh
-uv add "git+ssh://git@github.com/AvaLovelace1/LegoGPT.git"
+uv add "https://github.com/AvaLovelace1/LegoGPT.git"
 ```
 
 if using uv, or
 
 ```zsh
-pip install "git+ssh://git@github.com/AvaLovelace1/LegoGPT.git"
+pip install "https://github.com/AvaLovelace1/LegoGPT.git"
 ```
 
 if using pip.
@@ -43,21 +48,22 @@ if using pip.
 You can run inference with the fine-tuned LegoGPT model using:
 
 ```zsh
-uv run infer --model_name_or_path MODEL_PATH
+uv run infer
 ```
 
-This script starts an interactive session where you can input a prompt and get a response from the model. See
-`uv run infer -h` for a full list of options.
+This script starts an interactive session where you can input a prompt and get a response from the model.
+The model weights will automatically be downloaded from Hugging Face; they can be
+found [here](https://huggingface.co/AvaLovelace/LegoGPT).
+
+If you wish to run inference with a different set of model weights, specify them using the `--model_name_or_path`
+option. See `uv run infer -h` for a full list of options.
 
 ### Example interaction
 
 Here is an example interaction using the `infer` script:
 
-```zsh
-uv run infer --model_name_or_path '/data/apun/finetuned_hf/LegoGPT'
-```
-
 ```text
+> uv run infer
 Enter a prompt, or <Return> to exit: Table featuring a flat rectangular surface over four evenly spaced legs.
 Enter a filename to save the output image (default=output.png): output.png
 Enter a generation seed (default=42): 42
@@ -92,23 +98,29 @@ Enter another prompt, or <Return> to exit:
 
 `output.ldr` contains the LEGO structure in LDraw format, which can be opened with any LDraw-compatible software.
 
-## Fine-tuning LegoGPT
+## Running fine-tuning
 
-We use Hugging Face [TRL](https://huggingface.co/docs/trl/index)
-with [Accelerate](https://huggingface.co/docs/accelerate/index) for fine-tuning. To run fine-tuning, follow these
-instructions:
+LegoGPT was created by
+fine-tuning [Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct)
+on the custom LEGO dataset [StableText2Lego](https://huggingface.co/datasets/AvaLovelace/StableText2Lego), converted
+into instructional format. We used Hugging Face [TRL](https://huggingface.co/docs/trl/index)
+with [Accelerate](https://huggingface.co/docs/accelerate/index) for fine-tuning.
 
-1. Start with a LEGO dataset with the fields "caption" and "lego". The "caption" field should contain a description of
-   the LEGO model, and the "lego" field should contain the corresponding LEGO model, in the text format described in the
-   paper.
-2. Prepare the dataset for finetuning with
-   `uv run prepare_finetuning_dataset --input_path LEGO_DATASET_PATH --output_path FINETUNING_DATASET_PATH`.
-3. Download the pretrained [Llama-3.2-1B-Instruct model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) to
+To replicate the fine-tuning process, follow these instructions:
+
+1. Prepare the LEGO dataset for fine-tuning with
+   `uv run prepare_finetuning_dataset --input_path AvaLovelace/StableText2Lego --output_path [FINETUNING_DATASET_PATH]`.
+   This converts the dataset into the instructional format required for fine-tuning LLaMA.
+    - If you wish to run fine-tuning with your own LEGO dataset, replace `AvaLovelace/StableText2Lego` with the path to
+      your dataset. This dataset should have the fields "caption" and "lego". The "caption" field should contain a
+      description of a LEGO structure, and the "lego" field should contain the corresponding LEGO structure, in the text
+      format described in the paper.
+2. Download the pretrained [Llama-3.2-1B-Instruct model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) to
    some directory `[PRETRAINED_DIR]`.
    **IMPORTANT:** Replace the `config.json`, `special_tokens_map.json`, and `tokenizer_config.json` files with the ones
    in the `finetuning_config_files` directory. This specifies the `pad_token` to be different from the `eos_token`,
    fixing a fine-tuning [issue](https://github.com/unslothai/unsloth/issues/416) where the model will not learn to
    output EOS tokens properly.
-4. Initialize the Accelerate config file with `uv run accelerate config`.
-5. Run finetuning with `uv run ./finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [FINETUNING_DATASET_PATH]`. The
-   finetuned model will be saved to `[OUTPUT_DIR]/[RUN_NAME]`.
+3. Initialize the Accelerate config file with `uv run accelerate config`.
+4. Run fine-tuning with `uv run ./finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [FINETUNING_DATASET_PATH]`. The
+   fine-tuned model will be saved to `[OUTPUT_DIR]/[RUN_NAME]`.
