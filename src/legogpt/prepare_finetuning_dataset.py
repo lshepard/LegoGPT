@@ -12,10 +12,12 @@ from legogpt.models import create_instruction
 @dataclass
 class PrepareDatasetArguments:
     input_path: str = field(
+        default='AvaLovelace/StableText2Lego',
         metadata={'help': 'Path to the directory containing the LEGO dataset to be processed. '
                           'This dataset should contain at least the fields "caption" and "lego".'},
     )
     output_path: str = field(
+        default='datasets',
         metadata={'help': 'Path to the directory in which to save the processed fine-tuning dataset. '
                           'The fine-tuning dataset will contain the field "messages", a conversational exchange where '
                           'the user prompts the assistant with a "caption" and the assistant provides a "lego" '
@@ -52,6 +54,8 @@ def main():
             desc=f'Converting dataset split "{split_name}"',
         )
         output_split.to_json(Path(cfg.output_path) / f'{split_name}.jsonl')
+
+    print(f'Converted dataset saved to {cfg.output_path}')
 
 
 if __name__ == '__main__':
