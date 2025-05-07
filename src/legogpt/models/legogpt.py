@@ -18,7 +18,7 @@ from .llm import LLM
 @dataclass
 class LegoGPTConfig:
     model_name_or_path: str = field(
-        default='AvaLovelace/LegoGPT',
+        default='cmu-gil/LegoGPT',
         metadata={'help': 'Model checkpoint for weights initialization.'},
     )
     world_dim: int = field(

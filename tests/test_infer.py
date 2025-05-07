@@ -1,7 +1,7 @@
 from legogpt.data import LegoStructure
 from legogpt.models import LLM, LegoGPT, LegoGPTConfig, create_instruction
 
-LEGOGPT_PATH = 'AvaLovelace/LegoGPT'
+LEGOGPT_PATH = 'cmu-gil/LegoGPT'
 
 
 def test_llm():

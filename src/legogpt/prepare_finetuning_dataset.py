@@ -10,7 +10,7 @@ from transformers import HfArgumentParser
 @dataclass
 class PrepareDatasetArguments:
     input_path: str = field(
-        default='AvaLovelace/StableText2Lego',
+        default='cmu-gil/StableText2Lego',
         metadata={'help': 'Path to the directory containing the LEGO dataset to be processed. '
                           'This dataset should contain at least the fields "captions" (list[string]) and "lego" (string).'},
     )
