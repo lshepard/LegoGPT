@@ -1,7 +1,7 @@
 from legogpt.data import LegoStructure
 from legogpt.models import LLM, LegoGPT, LegoGPTConfig, create_instruction
 
-LEGOGPT_PATH = '/data/apun/finetuned_hf/Llama-3.2-1B-Instruct_finetuned_ShapeNet_hf_captionV3/checkpoint-40000'
+LEGOGPT_PATH = 'cmu-gil/LegoGPT'
 
 
 def test_llm():
