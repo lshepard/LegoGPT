@@ -18,7 +18,7 @@ project, first install all prerequisites. Then,
 1. Clone the repo: `git clone "https://github.com/AvaLovelace1/LegoGPT.git" && cd LegoGPT`.
 2. *(Optional, required for running the `infer` script)* Follow these instructions to install ImportLDraw and Blender,
    required for rendering LEGO visualizations:
-    - Install the ImportLDraw submodule with `git submodule init && git submodule update`.
+    - Install the ImportLDraw submodule with `git submodule update --init`.
         - Some files in the ImportLDraw submodule are stored using the Git LFS system. To download these files,
           install [Git LFS](https://git-lfs.com), `cd` into the ImportLDraw directory, and run
           `git lfs pull`.
