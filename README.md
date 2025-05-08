@@ -105,7 +105,7 @@ Three output files are created: `output.png`, `output.txt`, and `output.ldr`.
 
 `output.png` contains a rendered image of the generated LEGO structure:
 
-<img src="output_img.png" alt="Rendered LEGO output image" width="256"/>
+<img src="assets/output_img.png" alt="Rendered LEGO output image" width="256"/>
 
 `output.txt` contains the LEGO structure in brick-by-brick text format, where each line of the form `hxw (x,y,z)`
 represents a LEGO brick of height `h` and width `w` at position `(x,y,z)`:
