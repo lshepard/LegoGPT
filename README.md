@@ -148,7 +148,8 @@ To replicate the fine-tuning process, follow these instructions:
    fixing a fine-tuning [issue](https://github.com/unslothai/unsloth/issues/416) where the model will not learn to
    output EOS tokens properly.
 3. Initialize the Accelerate config file with `uv run accelerate config`.
-4. Run fine-tuning with `uv run ./finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [FINETUNING_DATASET_PATH]`. The
+4. Run fine-tuning with
+   `uv run ./scripts/finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [FINETUNING_DATASET_PATH]`. The
    fine-tuned model will be saved to `[OUTPUT_DIR]/[RUN_NAME]`.
 
 ## Citation
