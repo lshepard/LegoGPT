@@ -18,7 +18,7 @@ project, first install all prerequisites. Then,
 1. Clone the repo: `git clone "https://github.com/AvaLovelace1/LegoGPT.git" && cd LegoGPT`.
 2. *(Optional, required for running the `infer` script)* Follow these instructions to install ImportLDraw and Blender,
    required for rendering LEGO visualizations:
-    - Install the ImportLDraw submodule with `git submodule init && git submodule update`.
+    - Install the ImportLDraw submodule with `git submodule update --init`.
         - Some files in the ImportLDraw submodule are stored using the Git LFS system. To download these files,
           install [Git LFS](https://git-lfs.com), `cd` into the ImportLDraw directory, and run
           `git lfs pull`.
@@ -54,7 +54,7 @@ uv run infer
 
 This script starts an interactive session where you can input a prompt and get a response from the model.
 The model weights will automatically be downloaded from Hugging Face; they can be
-found [here](https://huggingface.co/cmu-gil/LegoGPT).
+found [here](https://huggingface.co/AvaLovelace/LegoGPT).
 
 If you wish to run inference with a different set of model weights, specify them using the `--model_name_or_path`
 option. See `uv run infer -h` for a full list of options.
@@ -107,16 +107,16 @@ software.
 
 LegoGPT was created by
 fine-tuning [Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct)
-on the custom LEGO dataset [StableText2Lego](https://huggingface.co/datasets/cmu-gil/StableText2Lego), converted
+on the custom LEGO dataset [StableText2Lego](https://huggingface.co/datasets/AvaLovelace/StableText2Lego), converted
 into instructional format. We used Hugging Face [TRL](https://huggingface.co/docs/trl/index)
 with [Accelerate](https://huggingface.co/docs/accelerate/index) for fine-tuning.
 
 To replicate the fine-tuning process, follow these instructions:
 
 1. Prepare the LEGO dataset for fine-tuning with
-   `uv run prepare_finetuning_dataset --input_path cmu-gil/StableText2Lego --output_path [FINETUNING_DATASET_PATH]`.
+   `uv run prepare_finetuning_dataset --input_path AvaLovelace/StableText2Lego --output_path [FINETUNING_DATASET_PATH]`.
    This converts the dataset into the instructional format required for fine-tuning LLaMA.
-    - If you wish to run fine-tuning with your own LEGO dataset, replace `cmu-gil/StableText2Lego` with the path to
+    - If you wish to run fine-tuning with your own LEGO dataset, replace `AvaLovelace/StableText2Lego` with the path to
       your dataset. This dataset should have the fields "captions" and "lego". The "lego" field should contain a LEGO
       structure in the text format described in the paper, and the "captions" field should contain a list of one or more
       descriptions of the LEGO structure.

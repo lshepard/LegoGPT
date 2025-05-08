@@ -1,18 +1,22 @@
+import argparse
+import math
 import os
 import sys
-import math
-import argparse
-
-PLUGIN_PATH = "/data/speedy/Projects/lego/io_scene_importldraw"
-LDRAW_LIB_PATH = "/data/speedy/Projects/lego/ldraw"
-
-# Append path to loadldraw module (to the places to try importing from)
-sys.path.append(PLUGIN_PATH)
+from pathlib import Path
 
 import bpy
-import bmesh
 from mathutils import Vector
 from tqdm import tqdm
+
+# Add path to ImportLDraw module
+sys.path.append(str(Path(__file__).parents[2]))
+
+import ImportLDraw
+from ImportLDraw.loadldraw.loadldraw import Options, Configure, loadFromFile, FileSystem
+import bmesh
+
+PLUGIN_PATH = Path(ImportLDraw.__file__).parent
+LDRAW_LIB_PATH = Path.home() / 'ldraw'
 
 bpy.data.scenes[0].render.engine = "CYCLES"
 
@@ -31,8 +35,7 @@ for d in bpy.context.preferences.addons["cycles"].preferences.devices:
         d["use"] = 1
     print(d["name"], d["use"])
 
-exec(open(os.path.join(PLUGIN_PATH, "loadldraw/loadldraw.py")).read())
-
+# exec(open(os.path.join(PLUGIN_PATH, "loadldraw/loadldraw.py")).read())
 
 # Set import options and import
 isBlender28OrLater = hasattr(bpy.app, "version") and bpy.app.version >= (2, 80)
@@ -40,16 +43,16 @@ hasCollections = hasattr(bpy.data, "collections")
 
 
 def render_lego(
-    in_file,
-    output_dir,
-    idx=0,
-    is_last=False,
-    reposition_camera=True,
-    square_image=True,
-    instructionsLook=False,
-    empty=False,
-    export=False,
-    fov=25,
+        in_file,
+        output_dir,
+        idx=0,
+        is_last=False,
+        reposition_camera=True,
+        square_image=True,
+        instructionsLook=False,
+        empty=False,
+        export=False,
+        fov=25,
 ):
     out_file = os.path.join(output_dir, f"images/{idx}.png")
     # Remove all objects but keep the camera
@@ -319,16 +322,17 @@ def smart_uv_unwrap_lego(obj):
 
     bpy.ops.object.mode_set(mode="OBJECT")
 
+
 def create_lightmap_uvs(obj, margin=0.1):
     bpy.context.view_layer.objects.active = obj
     bpy.ops.object.mode_set(mode='EDIT')
-    
+
     bm = bmesh.from_edit_mesh(obj.data)
     uv_layer = obj.data.uv_layers.new(name="Lightmap")
-    
+
     for face in bm.faces:
         face.select = True
-    
+
     bpy.ops.uv.lightmap_pack(
         PREF_CONTEXT='SEL_FACES',
         PREF_PACK_IN_ONE=True,
@@ -336,12 +340,11 @@ def create_lightmap_uvs(obj, margin=0.1):
         PREF_BOX_DIV=12,
         PREF_MARGIN_DIV=margin
     )
-    
+
     bmesh.update_edit_mesh(obj.data)
     bpy.ops.object.mode_set(mode='OBJECT')
-    
-    return uv_layer
 
+    return uv_layer
 
 
 def export_scene_to_obj(filepath, exclude_objects=None, remove_internal=True):
@@ -391,9 +394,9 @@ def export_scene_to_obj(filepath, exclude_objects=None, remove_internal=True):
     # smart_uv_unwrap_lego(joined_object)
     # lightmap_uv_unwrap_lego(joined_object)
     lightmap_uvs = create_lightmap_uvs(
-            joined_object,
-            margin=0.00,  # 5% margin between UV islands
-        )
+        joined_object,
+        margin=0.00,  # 5% margin between UV islands
+    )
 
     # Select only our object
     bpy.ops.object.select_all(action="DESELECT")
@@ -422,6 +425,8 @@ if __name__ == "__main__":
     # Get the absolute path of the input file
     in_file = os.path.abspath(args.in_file)
     out_file = os.path.abspath(args.out_file)
+    out_dir = os.path.dirname(out_file)
+    os.makedirs(os.path.join(out_dir), exist_ok=True)
     render_lego(
         in_file, out_file, square_image=True, instructionsLook=args.instructions_look, export=True, fov=args.fov
     )

@@ -1,0 +1,48 @@
+[project]
+name = "texture"
+version = "0.1.0"
+description = "Texturing module"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate>=1.6.0",
+    "bpy>=4.4.0",
+    "controlnet-aux>=0.0.9",
+    "diffusers<0.24.0",
+    "envlight>=0.1.0",
+    "h5py>=3.13.0",
+    "huggingface-hub<0.26",
+    "imageio>=2.37.0",
+    "jaxtyping>=0.3.2",
+    "libigl>=2.5.1",
+    "mathutils>=3.3.0",
+    "matplotlib>=3.10.1",
+    "mediapipe>=0.10.21",
+    "numpy<2.0",
+    "nvdiffrast>=0.3.3",
+    "omegaconf>=2.3.0",
+    "opencv-python>=4.11.0.86",
+    "pytorch-lightning>=2.5.1.post0",
+    "torch>=2.7.0",
+    "torchvision>=0.22.0",
+    "tqdm>=4.67.1",
+    "transformers>=4.48.3",
+    "trimesh>=4.6.8",
+    "typeguard>=4.4.2",
+    "wandb>=0.19.10",
+    "xatlas>=0.0.10",
+]
+
+[project.optional-dependencies]
+build = ["torch>=2.7.0"]
+compile = ["pytorch3d>=0.7.8", "tinycudann>=1.7", "nerfacc>=0.5.3"]
+
+[tool.uv]
+no-build-isolation-package = ["pytorch3d", "tinycudann", "nerfacc"]
+
+[tool.uv.sources]
+pytorch3d = { git = "https://github.com/facebookresearch/pytorch3d.git" }
+nvdiffrast = { git = "https://github.com/NVlabs/nvdiffrast.git" }
+envlight = { git = "https://github.com/ashawkey/envlight.git" }
+nerfacc = { git = "https://github.com/KAIR-BAIR/nerfacc.git" }
+tinycudann = { git = "https://github.com/NVlabs/tiny-cuda-nn.git", subdirectory = "bindings/torch" }
