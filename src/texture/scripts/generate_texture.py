@@ -14,16 +14,15 @@ def main(input_file: str, output_dir: str, prompt: str):
     print(f'Current Directory: {os.getcwd()}')
     print('---------------------')
 
-    subprocess.run(['python', 'blenderLego_toObj.py', '--in_file', input_file, '--out_file', output_dir],
-                   capture_output=True, check=True)
-
     texture_output_dir = os.path.join(output_dir, 'texture_output')
     texture_render_dir = os.path.join(output_dir, 'texture_render')
     os.makedirs(texture_output_dir, exist_ok=True)
     os.makedirs(texture_render_dir, exist_ok=True)
 
-    print('Generating texture...')
+    subprocess.run(['python', 'blenderLego_toObj.py', '--in_file', input_file, '--out_file', output_dir],
+                   capture_output=True, check=True)
 
+    print('Generating texture...')
     subprocess.run(
         ['python', 'generate_texture.py',
          '--input_mesh', os.path.join(output_dir, 'lego_structure_joint.obj'),
@@ -32,7 +31,6 @@ def main(input_file: str, output_dir: str, prompt: str):
     )
 
     print('Rendering texture...')
-
     subprocess.run(
         ['python', 'blender_obj_uv_normal.py', '--data_path', texture_output_dir,
          '--obj_name', 'output_mesh', '--albedo_map', 'texture_kd.png', '--normal_map', 'None',
