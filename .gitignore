@@ -12,3 +12,4 @@ wheels/
 .idea
 wandb
 *.un~
+.DS_Store
