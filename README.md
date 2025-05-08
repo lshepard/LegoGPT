@@ -41,8 +41,8 @@ project, first install all prerequisites. Then,
           `git lfs pull`.
     - Download the LDraw parts library `complete.zip` from [here](https://library.ldraw.org/updates?latest), and
       extract it in your *home directory*.
-3. Finally, [install uv](https://docs.astral.sh/uv/getting-started/installation/). A virtual environment will be
-   created, and the remaining dependencies installed automatically, upon invoking `uv run [SCRIPT_NAME]`.
+3. Finally, [install uv](https://docs.astral.sh/uv/getting-started/installation/), and run `uv sync` to create a Python
+   virtual environment with all dependencies installed. Python dependencies are defined in `pyproject.toml`.
 
 ### Installing as a package
 
@@ -132,7 +132,8 @@ on the custom LEGO dataset [StableText2Lego](https://huggingface.co/datasets/Ava
 into instructional format. We used Hugging Face [TRL](https://huggingface.co/docs/trl/index)
 with [Accelerate](https://huggingface.co/docs/accelerate/index) for fine-tuning.
 
-To replicate the fine-tuning process, follow these instructions:
+To replicate the fine-tuning process, first install additional Python dependencies with `uv sync --extra finetuning`.
+Then, follow these instructions:
 
 1. Prepare the LEGO dataset for fine-tuning with
    `uv run prepare_finetuning_dataset --input_path AvaLovelace/StableText2Lego --output_path [FINETUNING_DATASET_PATH]`.
