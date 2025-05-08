@@ -33,7 +33,7 @@ This repo uses the Python project manager [uv](https://docs.astral.sh/uv/). To i
 project, first install all prerequisites. Then,
 
 1. Clone the repo: `git clone "https://github.com/AvaLovelace1/LegoGPT.git" && cd LegoGPT`.
-2. *(Optional, required for running the `infer` script)* Follow these instructions to install ImportLDraw,
+2. *(Optional, required for running the `infer` script and texturing)* Follow these instructions to install ImportLDraw,
    required for rendering LEGO visualizations:
     - Install the ImportLDraw submodule with `git submodule update --init`.
         - Some files in the ImportLDraw submodule are stored using the Git LFS system. To download these files,
@@ -118,6 +118,11 @@ represents a LEGO brick of height `h` and width `w` at position `(x,y,z)`:
 
 And finally, `output.ldr` contains the LEGO structure in LDraw format, which can be opened with any LDraw-compatible
 software.
+
+## Running texturing
+
+The subdirectory `src/texture` contains the code for generating the UV texture or per-brick color given a LEGO design.
+To run texturing, `cd` into `src/texture` and follow the instructions in the `README.md` file there.
 
 ## Running fine-tuning
 
