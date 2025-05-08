@@ -21,10 +21,13 @@ def main():
 
         # Take user input
         filename = input('Enter a filename to save the output image (default=output.png): ')
-        base = os.path.splitext(filename)[0] if filename else 'output'
-        txt_filename = base + '.txt'
-        ldr_filename = base + '.ldr'
-        img_filename = base + '.png'
+        output_dir = os.path.dirname(filename)
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
+        base_name = os.path.splitext(filename)[0] if filename else 'output'
+        txt_filename = os.path.abspath(base_name + '.txt')
+        ldr_filename = os.path.abspath(base_name + '.ldr')
+        img_filename = os.path.abspath(base_name + '.png')
 
         seed = input('Enter a generation seed (default=42): ')
         seed = int(seed) if seed else 42
