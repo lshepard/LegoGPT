@@ -1,7 +1,26 @@
 # LegoGPT
 
+<div align="left">
+<a href=''><img src='https://img.shields.io/badge/Project_Page-Website-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
+  <a href= target="_blank"><img src=https://img.shields.io/badge/ArXiv-Paper-b5212f.svg?logo=arxiv height=22px></a>
+  <a href= target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg height=22px></a>
+</div>
+
 This is the official repository for **LegoGPT**, the first approach for generating physically stable LEGO
 brick models from text prompts.
+
+<img src="assets/teaser.jpg"/>
+
+***Generating Physically Stable and Buildable LEGO® Designs from Text***
+
+[Ava Pun*](https://avapun.com/),
+[Kangle Deng*](https://dunbar12138.github.io/),
+[Ruixuan Liu*](https://waynekyrie.github.io/),
+[Deva Ramanan](https://www.cs.cmu.edu/~deva/),
+[Changliu Liu](https://www.ri.cmu.edu/ri-faculty/changliu-liu/),
+[Jun-Yan Zhu](https://www.cs.cmu.edu/~junyanz/)
+
+Carnegie Mellon University
 
 ## Installation
 
@@ -129,3 +148,23 @@ To replicate the fine-tuning process, follow these instructions:
 3. Initialize the Accelerate config file with `uv run accelerate config`.
 4. Run fine-tuning with `uv run ./finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [FINETUNING_DATASET_PATH]`. The
    fine-tuned model will be saved to `[OUTPUT_DIR]/[RUN_NAME]`.
+
+
+## Citation
+
+If you find this repository useful for your research, please cite the following work.
+
+```bibtex
+@article{pun2025legogpt,
+    title   = {Generating Physically Stable and Buildable LEGO Designs from Text},
+    author  = {Pun, Ava and Deng, Kangle and Liu, Ruixuan and Ramanan, Deva and Liu, Changliu and Zhu, Jun-Yan},
+    journal = {arXiv preprint},
+    year    = {2025}
+}
+```
+
+## Acknowledgement
+
+We thank Minchen Li, Nupur Kumari, Ruihan Gao, and Yihao Shi for their discussion and help. JYZ is partly supported by the Packard Fellowship. The Microsoft Research PhD Fellowship supports KD.
+
+Our codebase is built upon several amazing repos:  Hugging Face [TRL](https://huggingface.co/docs/trl/index), [Accelerate](https://huggingface.co/docs/accelerate/index), [ImportLDraw](https://github.com/TobyLobster/ImportLDraw).
