@@ -1,25 +1,23 @@
 # LegoGPT
 
-<div align="left">
-<a href=''><img src='https://img.shields.io/badge/Project_Page-Website-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
-  <a href= target="_blank"><img src=https://img.shields.io/badge/ArXiv-Paper-b5212f.svg?logo=arxiv height=22px></a>
-  <a href= target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg height=22px></a>
+<div>
+<a href="https://avalovelace1.github.io/LegoGPT/"><img src="https://img.shields.io/badge/Project_Page-Website-green?logo=googlechrome&logoColor=white" alt="Project Page" height=22px></a>
+<a href="" target="_blank"><img src=https://img.shields.io/badge/ArXiv-Paper-b5212f.svg?logo=arxiv alt="ArXiv" height=22px></a>
+<a href="" target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Demo-blue.svg alt="HuggingFace" height=22px></a>
 </div>
 
 This is the official repository for **LegoGPT**, the first approach for generating physically stable LEGO
 brick models from text prompts.
 
-<img src="assets/teaser.jpg"/>
+<img src="assets/teaser.jpg" alt="Teaser figure"/>
 
-***Generating Physically Stable and Buildable LEGO® Designs from Text***
-
+***Generating Physically Stable and Buildable LEGO® Designs from Text***  
 [Ava Pun*](https://avapun.com/),
 [Kangle Deng*](https://dunbar12138.github.io/),
 [Ruixuan Liu*](https://waynekyrie.github.io/),
 [Deva Ramanan](https://www.cs.cmu.edu/~deva/),
 [Changliu Liu](https://www.ri.cmu.edu/ri-faculty/changliu-liu/),
-[Jun-Yan Zhu](https://www.cs.cmu.edu/~junyanz/)
-
+[Jun-Yan Zhu](https://www.cs.cmu.edu/~junyanz/)  
 Carnegie Mellon University
 
 ## Installation
@@ -35,7 +33,7 @@ This repo uses the Python project manager [uv](https://docs.astral.sh/uv/). To i
 project, first install all prerequisites. Then,
 
 1. Clone the repo: `git clone "https://github.com/AvaLovelace1/LegoGPT.git" && cd LegoGPT`.
-2. *(Optional, required for running the `infer` script)* Follow these instructions to install ImportLDraw and Blender,
+2. *(Optional, required for running the `infer` script)* Follow these instructions to install ImportLDraw,
    required for rendering LEGO visualizations:
     - Install the ImportLDraw submodule with `git submodule update --init`.
         - Some files in the ImportLDraw submodule are stored using the Git LFS system. To download these files,
@@ -43,7 +41,6 @@ project, first install all prerequisites. Then,
           `git lfs pull`.
     - Download the LDraw parts library `complete.zip` from [here](https://library.ldraw.org/updates?latest), and
       extract it in your *home directory*.
-    - Install [Blender](https://www.blender.org/download).
 3. Finally, [install uv](https://docs.astral.sh/uv/getting-started/installation/). A virtual environment will be
    created, and the remaining dependencies installed automatically, upon invoking `uv run [SCRIPT_NAME]`.
 
@@ -149,7 +146,6 @@ To replicate the fine-tuning process, follow these instructions:
 4. Run fine-tuning with `uv run ./finetune.zsh [PRETRAINED_DIR] [OUTPUT_DIR] [RUN_NAME] [FINETUNING_DATASET_PATH]`. The
    fine-tuned model will be saved to `[OUTPUT_DIR]/[RUN_NAME]`.
 
-
 ## Citation
 
 If you find this repository useful for your research, please cite the following work.
@@ -163,8 +159,13 @@ If you find this repository useful for your research, please cite the following 
 }
 ```
 
-## Acknowledgement
+## Acknowledgements
 
-We thank Minchen Li, Nupur Kumari, Ruihan Gao, and Yihao Shi for their discussion and help. JYZ is partly supported by the Packard Fellowship. The Microsoft Research PhD Fellowship supports KD.
+We thank Minchen Li, Ken Goldberg, Nupur Kumari, Ruihan Gao, and Yihao Shi for their discussions and help.  
+We also thank Jiaoyang Li, Philip Huang, and Shobhit Aggarwal for developing the bimanual robotic system.
+This work is partly supported by the Packard Foundation, Cisco Research Grant, and Amazon Faculty Award. This work is
+also in part supported by the Manufacturing Futures Institute, Carnegie Mellon University, through a grant from the
+Richard King Mellon Foundation. KD is supported by the Microsoft Research PhD Fellowship.
 
-Our codebase is built upon several amazing repos:  Hugging Face [TRL](https://huggingface.co/docs/trl/index), [Accelerate](https://huggingface.co/docs/accelerate/index), [ImportLDraw](https://github.com/TobyLobster/ImportLDraw).
+Our codebase is built upon several amazing repos:  Hugging
+Face [TRL](https://huggingface.co/docs/trl/index), [Accelerate](https://huggingface.co/docs/accelerate/index), [ImportLDraw](https://github.com/TobyLobster/ImportLDraw).
