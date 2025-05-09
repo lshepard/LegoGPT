@@ -8,7 +8,8 @@ from pathlib import Path
 import bpy
 
 # Add path to ImportLDraw module
-sys.path.append(str(Path(__file__).parents[2]))
+root_dir = Path(__file__).parents[2]
+sys.path.append(str(root_dir))
 
 import ImportLDraw
 from ImportLDraw.loadldraw.loadldraw import Options, Configure, loadFromFile, FileSystem
@@ -26,8 +27,13 @@ def render_lego(
     in_file = os.path.abspath(in_file)
     out_file = os.path.abspath(out_file)
 
+    # Set the path to the ImportLDraw and LDraw libraries
     plugin_path = Path(ImportLDraw.__file__).parent
-    ldraw_lib_path = Path.home() / 'ldraw'
+    ldraw_lib_path = os.environ.get('LDRAW_LIBRARY_PATH')
+    if not ldraw_lib_path or not os.path.exists(ldraw_lib_path):
+        # Default path to LDraw library is home directory
+        ldraw_lib_path = Path.home() / 'ldraw'
+    ldraw_lib_path = os.path.abspath(ldraw_lib_path)
 
     # Initialize bpy
     with stdout_redirected(os.devnull):
