@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 # Add legogpt to the system path
-sys.path.append(str(Path(__file__).parent.parent.parent))
+sys.path.append(str(Path(__file__).parents[2]))
 from legogpt.data import LegoStructure
 
 
