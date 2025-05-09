@@ -25,7 +25,7 @@ def test_lego_structure():
     lego_ldr = '1 115 20.0 0 60.0 0 0 1 0 1 0 -1 0 0 2456.DAT\n0 STEP\n' \
                '1 115 60.0 0 60.0 0 0 1 0 1 0 -1 0 0 2456.DAT\n0 STEP\n'
 
-    for lego in [LegoStructure.from_json(lego_json), LegoStructure.from_txt(lego_txt)]:
+    for lego in [LegoStructure.from_json(lego_json), LegoStructure.from_txt(lego_txt), LegoStructure.from_ldr(lego_ldr)]:
         assert len(lego) == 2
         assert lego.to_json() == lego_json
         assert lego.to_txt() == lego_txt

@@ -5,7 +5,9 @@ from dataclasses import dataclass
 import numpy as np
 
 from legogpt.stability_analysis import stability_score, StabilityConfig
-from .lego_library import lego_library, dimensions_to_brick_id, brick_id_to_part_id
+from .lego_library import (lego_library,
+                           dimensions_to_brick_id, brick_id_to_dimensions,
+                           brick_id_to_part_id, part_id_to_brick_id)
 
 
 @dataclass(frozen=True, order=True, kw_only=True)
@@ -69,8 +71,7 @@ class LegoBrick:
 
     @classmethod
     def from_json(cls, brick_json: dict):
-        properties = lego_library[str(brick_json['brick_id'])]
-        h, w = properties['height'], properties['width']
+        h, w = brick_id_to_dimensions(brick_json['brick_id'])
         if brick_json['ori'] == 1:
             h, w = w, h
         x, y, z = brick_json['x'], brick_json['y'], brick_json['z']
@@ -85,6 +86,32 @@ class LegoBrick:
 
         h, w, x, y, z = map(int, match.group(1, 2, 3, 4, 5))
         return cls(h=h, w=w, x=x, y=y, z=z)
+
+    @classmethod
+    def from_ldr(cls, brick_ldr: str):
+        ldr_components = brick_ldr.strip().split()
+        match ldr_components:
+            case ['1', _, x0, y0, z0, *matrix, part_id]:
+                x0, y0, z0 = map(float, (x0, y0, z0))
+                matrix_str = ' '.join(matrix)
+                if matrix_str == '0 0 1 0 1 0 -1 0 0':
+                    ori = 0
+                elif matrix_str == '-1 0 0 0 1 0 0 0 -1':
+                    ori = 1
+                else:
+                    raise ValueError(f'Invalid transformation matrix: {matrix_str}')
+
+                h, w = brick_id_to_dimensions(part_id_to_brick_id(part_id))
+                if ori == 1:
+                    h, w = w, h
+
+                x = int(x0 / 20 - h * 0.5)
+                y = int(z0 / 20 - w * 0.5)
+                z = int(-y0 / 24)
+
+                return cls(h=h, w=w, x=x, y=y, z=z)
+            case _:
+                raise ValueError(f"LDR format is ill-formatted: {brick_ldr}")
 
 
 class LegoStructure:
@@ -177,6 +204,13 @@ class LegoStructure:
     @classmethod
     def from_txt(cls, lego_txt: str):
         bricks_txt = lego_txt.split('\n')
-        bricks_txt = list(filter(None, bricks_txt))  # Remove blank lines
+        bricks_txt = [b for b in bricks_txt if b.strip()]  # Remove blank lines
         bricks = [LegoBrick.from_txt(brick) for brick in bricks_txt]
+        return cls(bricks)
+
+    @classmethod
+    def from_ldr(cls, lego_ldr: str):
+        bricks_ldr = lego_ldr.split('0 STEP')  # Split on step lines
+        bricks_ldr = [b for b in bricks_ldr if b.strip()]  # Remove blank or whitespace-only lines
+        bricks = [LegoBrick.from_ldr(brick) for brick in bricks_ldr]
         return cls(bricks)

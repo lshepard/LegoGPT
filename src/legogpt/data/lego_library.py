@@ -28,8 +28,22 @@ def dimensions_to_brick_id(h: int, w: int):
         raise ValueError(f'No brick ID for brick of dimensions: {h}x{w}')
 
 
+def brick_id_to_dimensions(brick_id: int) -> (int, int):
+    return lego_library[str(brick_id)]['height'], lego_library[str(brick_id)]['width']
+
+
 def brick_id_to_part_id(brick_id: int) -> str:
     """
     Returns the part ID of the given brick, which is the ID of the brick model used in LDraw files.
     """
     return lego_library[str(brick_id)]['partID']
+
+
+def part_id_to_brick_id(part_id: str) -> int:
+    """
+    Returns the brick ID of the given part ID, which is the ID of the brick used in the LEGO library.
+    """
+    for brick_id, properties in lego_library.items():
+        if properties['partID'] == part_id:
+            return int(brick_id)
+    raise ValueError(f'No brick ID for part ID: {part_id}')
