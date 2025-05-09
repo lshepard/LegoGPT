@@ -10,15 +10,15 @@ In addition to the dependencies required by the main repo, this project requires
 
 1. **FlashTex and blender-render-toolkit.** These are provided as Git submodules; install them with
    `git submodule update --init`.
-2. **Additional Python dependencies.** Run
-   `uv sync --extra build && uv sync --extra compile` to create a Python virtual environment with all
-   dependencies installed.
+2. **A different set of Python dependencies,** defined in the `pyproject.toml` file in this directory. `cd` into this
+   directory, then run `uv sync --extra build && uv sync --extra compile` to create a Python virtual environment with
+   all dependencies installed.
 
 ---
 
 ### Textured LEGO Model Generation
 
-Given a LEGO LDR file and a text prompt as input, generate the UV texture for it.
+Given a LEGO LDR or txt file and a text prompt as input, generate the UV texture for it.
 
 ```zsh
 INPUT="./examples/chair.ldr"     # Input LDR file
@@ -36,10 +36,10 @@ can check the rendered image `./out/chair/texture_render/output_mesh_full_color.
 
 ### Colored LEGO Model Generation
 
-Given a LEGO txt file and a text prompt as input, colorize each brick.
+Given a LEGO LDR or txt file and a text prompt as input, colorize each brick.
 
 ```zsh
-INPUT="./examples/guitar.txt"     # Input Text file
+INPUT="./examples/guitar.ldr"     # Input Text file
 OUTPUT="./out/guitar"             # Output dir
 TXT_PROMPT="Parlor guitar with ladder bracing, folk revival design, best quality, hd"                        # Text Prompt
 
