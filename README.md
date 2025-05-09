@@ -31,13 +31,16 @@ request a free licence from the Gurobi website [here](https://www.gurobi.com/aca
 
 #### HuggingFace
 
-Inference also requires a HuggingFace account and approval to download the Llama-3.2 model.
+Inference and fine-tuning require a HuggingFace account and approval to download the underlying model.
 
 1. Make an account on [hugginugface.co](https://huggingface.co/).
-2. Install the huggingface-cli [huggingface-cli](https://huggingface.co/docs/huggingface_hub/en/guides/cli): `pip install -U "huggingface_hub[cli]"`
-3. Log in on the command line by running: `huggingface-cli login`
-4. Then, visit [the Llama-3.2 model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) page
-5. Submit the form requesting your contact information. It may [take up to a few days](https://www.llama.com/docs/getting-the-models/hugging-face/) to be accepted before you can use the model.
+2. Then, visit [the Llama-3.2 model](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) page
+3. Submit the form requesting your contact information. Approval usually happens within a few minutes but it can [take up to a few days](https://www.llama.com/docs/getting-the-models/hugging-face/).
+4. Visit your [HuggingFace settings page](https://huggingface.co/settings/tokens) and Create a New Token. Make sure you grant the token access to the Llama-3.2-1B-Instruct repo.
+5. Install the huggingface-cli [huggingface-cli](https://huggingface.co/docs/huggingface_hub/en/guides/cli): `pip install -U "huggingface_hub[cli]"`
+6. Log in on the command line by running: `huggingface-cli login`
+
+You can now proceed to use inference.
 
 ### Installing as a standalone project
 
